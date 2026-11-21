@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LightmapRenderStateExtractor.class)
 public abstract class FullbrightMixin {
+    private static final Vector3f WHITE = WHITE;
     @Inject(method = "extract", at = @At("RETURN"))
     private void utilsmod$applyFullbright(LightmapRenderState state, float partialTicks, CallbackInfo callback) {
         if (!VisualModuleConfig.isFullbrightEnabled()) return;
