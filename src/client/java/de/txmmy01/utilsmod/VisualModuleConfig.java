@@ -24,18 +24,7 @@ public final class VisualModuleConfig {
         return Boolean.parseBoolean(VALUES.getProperty("fullbright.enabled", "false"));
     }
 
-    public static double getOriginalGamma() {
-        try {
-            return Math.clamp(Double.parseDouble(VALUES.getProperty("fullbright.originalGamma", "0.5")), 0.0, 1.0);
-        } catch (NumberFormatException exception) {
-            return 0.5;
-        }
-    }
-
-    public static void setFullbrightEnabled(boolean enabled, double currentGamma) {
-        if (enabled && !isFullbrightEnabled()) {
-            VALUES.setProperty("fullbright.originalGamma", Double.toString(Math.clamp(currentGamma, 0.0, 1.0)));
-        }
+    public static void setFullbrightEnabled(boolean enabled) {
         VALUES.setProperty("fullbright.enabled", Boolean.toString(enabled));
         save();
     }
