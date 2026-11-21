@@ -70,7 +70,7 @@ public final class BlockGlowRenderer {
             int color = BlockGlowConfig.getBlockColor(blockId);
             int alpha = Math.min(255, Math.round(((color >>> 24) & 0xFF) * intensity));
             int visibleColor = (color & 0x00FFFFFF) | (alpha << 24);
-            Gizmos.box(position, GizmoStyle.stroke(visibleColor, 1.5f)).ignoreOcclusion();
+            Gizmos.cuboid(position, GizmoStyle.stroke(visibleColor, 1.5f)).setAlwaysOnTop();
         }
     }
 }
