@@ -121,28 +121,17 @@ public final class BlockGlowConfig {
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
+        ConfigStorage.load(FILE, VALUES, "UtilsMod");
+        try {
             enabled = Boolean.parseBoolean(VALUES.getProperty("blockglow.enabled", "false"));
             renderDistance = Math.clamp(Integer.parseInt(VALUES.getProperty("blockglow.distance", "16")), 8, 32);
             intensity = Math.clamp(Float.parseFloat(VALUES.getProperty("blockglow.intensity", "1.0")), 0.5f, 2.0f);
-        } catch (IOException | NumberFormatException exception) {
-            UtilsModClient.LOGGER.error("Could not load UtilsMod configuration", exception);
+        } catch (NumberFormatException exception) {
+            UtilsModClient.LOGGER.error("Could not parse UtilsMod configuration values", exception);
         }
     }
 
     private static void save() {
-        VALUES.setProperty("blockglow.enabled", Boolean.toString(enabled));
-        VALUES.setProperty("blockglow.distance", Integer.toString(renderDistance));
-        VALUES.setProperty("blockglow.intensity", Float.toString(intensity));
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save UtilsMod configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "UtilsMod");
     }
 }

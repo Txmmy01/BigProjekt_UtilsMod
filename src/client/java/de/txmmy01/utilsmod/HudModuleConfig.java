@@ -62,22 +62,10 @@ public final class HudModuleConfig {
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not load HUD module configuration", exception);
-        }
+        ConfigStorage.load(FILE, VALUES, "HUD module");
     }
 
     private static void save() {
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save HUD module configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "HUD module");
     }
 }

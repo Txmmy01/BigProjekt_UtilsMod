@@ -48,22 +48,10 @@ public final class VisualModuleConfig {
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not load visual module configuration", exception);
-        }
+        ConfigStorage.load(FILE, VALUES, "visual module");
     }
 
     private static void save() {
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save visual module configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "visual module");
     }
 }
