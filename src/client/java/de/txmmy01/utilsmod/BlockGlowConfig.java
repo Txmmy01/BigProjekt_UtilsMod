@@ -108,7 +108,11 @@ public final class BlockGlowConfig {
     }
 
     private static String key(String dimension, String blockId, String setting) {
-        return "dimension." + dimensionKey(dimension) + "." + blockId.replace(':', '.') + "." + setting;
+        String encodedDimension = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(dimension.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        String encodedBlock = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(blockId.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        return "dimension64." + encodedDimension + "." + encodedBlock + "." + setting;
     }
 
     private static int parseColor(String value, int fallback) {
