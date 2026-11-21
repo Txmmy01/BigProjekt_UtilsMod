@@ -64,47 +64,47 @@ public final class UtilsModScreen extends Screen {
                 y += 30;
                 addRenderableWidget(Button.builder(Component.literal("Render distance: " + BlockGlowConfig.getRenderDistance()), button -> {
                     BlockGlowConfig.cycleRenderDistance(); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(Component.literal("Intensity: " + BlockGlowConfig.getIntensity()), button -> {
                     BlockGlowConfig.cycleIntensity(); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
             } else if (selectedModule.equals("visual")) {
                 addRenderableWidget(Button.builder(moduleState("Fullbright", VisualModuleConfig.isFullbrightEnabled()), button -> {
                     VisualModuleConfig.setFullbrightEnabled(!VisualModuleConfig.isFullbrightEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("Clear lava", VisualModuleConfig.isClearLavaEnabled()), button -> {
                     VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("Clear water", VisualModuleConfig.isClearWaterEnabled()), button -> {
                     VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
             } else if (selectedModule.equals("hud")) {
                 addRenderableWidget(Button.builder(moduleState("Armor HUD", HudModuleConfig.isArmorHudEnabled()), button -> {
                     HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("Potion bars", HudModuleConfig.isPotionBarsEnabled()), button -> {
                     HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("FPS HUD", HudModuleConfig.isFpsHudEnabled()), button -> {
                     HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("CPS counter", HudModuleConfig.isCpsEnabled()), button -> {
                     HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("Coordinates", HudModuleConfig.isCoordinatesEnabled()), button -> {
                     HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(moduleState("Direction", HudModuleConfig.isDirectionEnabled()), button -> {
                     HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
             }
         }
 
