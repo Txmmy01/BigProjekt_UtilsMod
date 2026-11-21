@@ -3,6 +3,7 @@
   "package": "de.txmmy01.utilsmod.mixin",
   "compatibilityLevel": "JAVA_25",
   "client": [
+    "FullbrightMixin",
     "FogRendererMixin"
   ],
   "injectors": {
