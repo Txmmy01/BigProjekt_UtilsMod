@@ -9,9 +9,8 @@ public final class HudLayoutConfig {
     private static final Properties VALUES = new Properties();
     static { ConfigStorage.load(FILE, VALUES, "HUD layout"); }
     private HudLayoutConfig() {}
-
-    public static int x(String id, int fallback) { return integer(id + ".x", fallback); }
-    public static int y(String id, int fallback) { return integer(id + ".y", fallback); }
+    public static int x(String id, int fallback) { return integer(id + ".x", 0); }
+    public static int y(String id, int fallback) { return integer(id + ".y", 0); }
     public static float scale(String id) {
         try { return Math.clamp(Float.parseFloat(VALUES.getProperty(id + ".scale", "1.0")), 0.5f, 2.5f); }
         catch (NumberFormatException ignored) { return 1.0f; }

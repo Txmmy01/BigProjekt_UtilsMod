@@ -94,16 +94,27 @@ public final class HudModuleRenderer {
         int width = graphics.guiWidth();
 
         if (HudModuleConfig.isFpsHudEnabled()) {
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(HudLayoutConfig.x("fps", 0), HudLayoutConfig.y("fps", 0));
+            graphics.pose().scale(HudLayoutConfig.scale("fps"), HudLayoutConfig.scale("fps"));
             drawPanel(graphics, 6, 6, 72, 15);
             graphics.text(client.font, Component.literal("FPS  " + client.getFps()), 11, 10, TEXT);
+            graphics.pose().popMatrix();
         }
 
         if (HudModuleConfig.isCpsEnabled()) {
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(HudLayoutConfig.x("cps", 0), HudLayoutConfig.y("cps", 0));
+            graphics.pose().scale(HudLayoutConfig.scale("cps"), HudLayoutConfig.scale("cps"));
             drawPanel(graphics, 6, 24, 100, 15);
             graphics.text(client.font, Component.literal("L " + leftCps + "  R " + rightCps), 11, 28, TEXT);
+            graphics.pose().popMatrix();
         }
 
         int infoY = HudModuleConfig.isCpsEnabled() ? 42 : HudModuleConfig.isFpsHudEnabled() ? 24 : 6;
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(HudLayoutConfig.x("info", 0), HudLayoutConfig.y("info", 0));
+        graphics.pose().scale(HudLayoutConfig.scale("info"), HudLayoutConfig.scale("info"));
         if (HudModuleConfig.isCoordinatesEnabled()) {
             var position = client.player.blockPosition();
             String coordinates = "XYZ  " + position.getX() + "  " + position.getY() + "  " + position.getZ();
@@ -143,12 +154,21 @@ public final class HudModuleRenderer {
             drawInfoLine(graphics, client, "HUNGER  " + client.player.getFoodData().getFoodLevel() + "/20", infoY, width);
             infoY += 19;
         }
+        graphics.pose().popMatrix();
         if (HudModuleConfig.isPotionBarsEnabled()) {
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(HudLayoutConfig.x("potions", 0), HudLayoutConfig.y("potions", 0));
+            graphics.pose().scale(HudLayoutConfig.scale("potions"), HudLayoutConfig.scale("potions"));
             drawPotionBars(graphics, client, width, graphics.guiHeight(), infoY);
+            graphics.pose().popMatrix();
         }
 
         if (HudModuleConfig.isArmorHudEnabled()) {
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(HudLayoutConfig.x("armor", 0), HudLayoutConfig.y("armor", 0));
+            graphics.pose().scale(HudLayoutConfig.scale("armor"), HudLayoutConfig.scale("armor"));
             drawArmorHud(graphics, client, width, graphics.guiHeight());
+            graphics.pose().popMatrix();
         }
     }
 

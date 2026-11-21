@@ -44,7 +44,8 @@ public final class UtilsModScreen extends Screen {
         switch (page) {
             case DASHBOARD -> {
                 addButton("Modules", left, top, buttonWidth, buttonHeight, () -> changePage(Page.MODULES));
-                addButton("Settings", left, top + buttonStep, buttonWidth, buttonHeight, () -> changePage(Page.SETTINGS));
+                addButton("HUD Layout Editor", left, top + buttonStep, buttonWidth, buttonHeight, () -> minecraft.gui.setScreen(new HudLayoutScreen()));
+                addButton("Settings", left, top + buttonStep * 2, buttonWidth, buttonHeight, () -> changePage(Page.SETTINGS));
             }
             case MODULES -> {
                 addButton("BlockGlow", left, top, buttonWidth, buttonHeight, () -> openModule("blockglow"));
@@ -91,7 +92,7 @@ public final class UtilsModScreen extends Screen {
 
     private int visibleRowCount() {
         return switch (page) {
-            case DASHBOARD -> 2;
+            case DASHBOARD -> 3;
             case MODULES -> 3;
             case MODULE_SETTINGS -> selectedModule.equals("hud") ? 6 : 3;
             case SETTINGS -> 1;

@@ -28,8 +28,8 @@ public final class HudLayoutScreen extends Screen {
         graphics.text(font, Component.literal("HUD LAYOUT EDITOR"), 12, 10, 0xFFFFFFFF);
         graphics.text(font, Component.literal("Drag an element to move it  •  Mouse wheel: resize  •  ESC: close"), 12, 24, 0xFFCCCCCC);
         for (Element element : ELEMENTS) {
-            int x = baseX(element) + HudLayoutConfig.x(element.id, baseX(element));
-            int y = baseY(element) + HudLayoutConfig.y(element.id, baseY(element));
+            int x = baseX(element) + HudLayoutConfig.x(element.id, 0);
+            int y = baseY(element) + HudLayoutConfig.y(element.id, 0);
             float scale = HudLayoutConfig.scale(element.id);
             int w = Math.max(30, Math.round(element.width * scale));
             int h = Math.max(16, Math.round(element.height * scale));
@@ -49,8 +49,8 @@ public final class HudLayoutScreen extends Screen {
         if (button == 0) {
             for (int i = ELEMENTS.size() - 1; i >= 0; i--) {
                 Element e = ELEMENTS.get(i);
-                int x = baseX(e) + HudLayoutConfig.x(e.id, baseX(e));
-                int y = baseY(e) + HudLayoutConfig.y(e.id, baseY(e));
+                int x = baseX(e) + HudLayoutConfig.x(e.id, 0);
+                int y = baseY(e) + HudLayoutConfig.y(e.id, 0);
                 float scale = HudLayoutConfig.scale(e.id);
                 if (mouseX >= x && mouseX <= x + e.width * scale && mouseY >= y && mouseY <= y + e.height * scale) {
                     selected = e.id;
