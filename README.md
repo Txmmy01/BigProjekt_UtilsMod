@@ -3,10 +3,10 @@
 A client-side Fabric utility mod for Minecraft 26.2.
 
 **Author:** Txmmy01  
-**Version:** 1.0.0  
+**Version:** 2.0.0  
 **Mod ID:** utilsmod
 
-## Implemented in v1.0.0
+## v1.0.0
 
 - Custom dark interface with orange accents
 - Right Shift keybind to open and close the GUI
@@ -20,6 +20,14 @@ A client-side Fabric utility mod for Minecraft 26.2.
 - Persistent settings in `config/utilsmod.properties`
 - Through-wall outlines rendered as always-on-top gizmos; original block textures are not modified
 
+## Added for v2.0.0
+
+- Fullbright: independently toggles maximum vanilla gamma and restores the previous gamma setting when disabled
+- Clear Lava: removes camera-submersion fog while the camera is in lava
+- Clear Water: removes camera-submersion fog while the camera is underwater
+- Independent module toggles in the GUI
+- Persistent visual module settings in `config/utilsmod-visual.properties`
+
 ## Build
 
 The project targets Minecraft 26.2, Fabric Loader, Fabric API and Java 25.
@@ -30,8 +38,8 @@ Build with Gradle 9.8.2:
 gradle --no-daemon build
 ```
 
-The mod JAR is written to `build/libs/`. GitHub Actions builds the project on every push to `main` and uploads the JAR as a workflow artifact.
+The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` and the v2 development branch, and uploads the JAR as a workflow artifact.
 
 ## Validation
 
-The Java 25 / Gradle 9.8.2 GitHub Actions build completed successfully for the current implementation. An in-game visual and multiplayer smoke test still needs to be performed in a Minecraft 26.2 client.
+A successful build confirms compilation and packaging only. An in-game visual test is required to validate rendering behavior in a Minecraft 26.2 client.
