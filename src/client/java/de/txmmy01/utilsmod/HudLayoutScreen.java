@@ -2,6 +2,7 @@ package de.txmmy01.utilsmod;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -45,7 +46,10 @@ public final class HudLayoutScreen extends Screen {
     private int baseY(Element e) { return e.y < 0 ? height / 2 + e.y : e.y; }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (button == 0) {
             for (int i = ELEMENTS.size() - 1; i >= 0; i--) {
                 Element e = ELEMENTS.get(i);
@@ -63,24 +67,27 @@ public final class HudLayoutScreen extends Screen {
                 }
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, doubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
         if (dragging && button == 0) {
             Element e = element(selected);
             HudLayoutConfig.move(selected, startX + (int)(mouseX - this.dragX) - baseX(e),
                     startY + (int)(mouseY - this.dragY) - baseY(e));
             return true;
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) { dragging = false; return true; }
-        return super.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (event.button() == 0) { dragging = false; return true; }
+        return super.mouseReleased(event);
     }
 
     @Override
