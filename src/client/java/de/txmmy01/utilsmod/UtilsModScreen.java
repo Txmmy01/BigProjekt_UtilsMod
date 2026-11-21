@@ -72,6 +72,14 @@ public final class UtilsModScreen extends Screen {
                     y += buttonStep;
                     addButton("Coordinates  " + (HudModuleConfig.isCoordinatesEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()));
                     addButton("Direction  " + (HudModuleConfig.isDirectionEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()));
+                    y += buttonStep;
+                    addButton("Ping HUD  " + (HudModuleConfig.isPingHudEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setPingHudEnabled(!HudModuleConfig.isPingHudEnabled()));
+                    addButton("Biome HUD  " + (HudModuleConfig.isBiomeHudEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setBiomeHudEnabled(!HudModuleConfig.isBiomeHudEnabled()));
+                    y += buttonStep;
+                    addButton("Speed HUD  " + (HudModuleConfig.isSpeedHudEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setSpeedHudEnabled(!HudModuleConfig.isSpeedHudEnabled()));
+                    addButton("World Time  " + (HudModuleConfig.isWorldTimeHudEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setWorldTimeHudEnabled(!HudModuleConfig.isWorldTimeHudEnabled()));
+                    y += buttonStep;
+                    addButton("Hunger HUD  " + (HudModuleConfig.isHungerHudEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setHungerHudEnabled(!HudModuleConfig.isHungerHudEnabled()));
                 }
             }
             case SETTINGS -> addToggle("GUI animations", UiConfig.isAnimationsEnabled(), left, top, buttonWidth, buttonHeight, () -> UiConfig.setAnimationsEnabled(!UiConfig.isAnimationsEnabled()));
@@ -85,7 +93,7 @@ public final class UtilsModScreen extends Screen {
         return switch (page) {
             case DASHBOARD -> 2;
             case MODULES -> 3;
-            case MODULE_SETTINGS -> 3;
+            case MODULE_SETTINGS -> selectedModule.equals("hud") ? 6 : 3;
             case SETTINGS -> 1;
         };
     }

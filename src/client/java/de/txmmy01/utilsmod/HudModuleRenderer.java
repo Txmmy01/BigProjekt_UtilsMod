@@ -113,10 +113,38 @@ public final class HudModuleRenderer {
         if (HudModuleConfig.isDirectionEnabled()) {
             String facing = "FACING  " + client.player.getDirection().getName().toUpperCase(java.util.Locale.ROOT);
             drawInfoLine(graphics, client, facing, infoY, width);
+            infoY += 19;
         }
-
+        if (HudModuleConfig.isPingHudEnabled() && client.getConnection() != null) {
+            var info = client.getConnection().getPlayerInfo(client.player.getUUID());
+            if (info != null) {
+                drawInfoLine(graphics, client, "PING  " + info.getLatency() + " ms", infoY, width);
+                infoY += 19;
+            }
+        }
+        if (HudModuleConfig.isBiomeHudEnabled()) {
+            String biome = client.level.getBiome(client.player.blockPosition()).value().getName().getString();
+            drawInfoLine(graphics, client, "BIOME  " + biome, infoY, width);
+            infoY += 19;
+        }
+        if (HudModuleConfig.isSpeedHudEnabled()) {
+            double speed = client.player.getDeltaMovement().horizontalDistance() * 20.0;
+            drawInfoLine(graphics, client, String.format(java.util.Locale.ROOT, "SPEED  %.2f m/s", speed), infoY, width);
+            infoY += 19;
+        }
+        if (HudModuleConfig.isWorldTimeHudEnabled()) {
+            long dayTime = Math.floorMod(client.level.getDayTime(), 24000L);
+            int hours = (int) ((dayTime / 1000 + 6) % 24);
+            int minutes = (int) (dayTime % 1000 * 60 / 1000);
+            drawInfoLine(graphics, client, String.format(java.util.Locale.ROOT, "TIME  %02d:%02d", hours, minutes), infoY, width);
+            infoY += 19;
+        }
+        if (HudModuleConfig.isHungerHudEnabled()) {
+            drawInfoLine(graphics, client, "HUNGER  " + client.player.getFoodData().getFoodLevel() + "/20", infoY, width);
+            infoY += 19;
+        }
         if (HudModuleConfig.isPotionBarsEnabled()) {
-            drawPotionBars(graphics, client, width, graphics.guiHeight(), infoY + (HudModuleConfig.isDirectionEnabled() ? 19 : 0));
+            drawPotionBars(graphics, client, width, graphics.guiHeight(), infoY);
         }
 
         if (HudModuleConfig.isArmorHudEnabled()) {
@@ -179,10 +207,9 @@ public final class HudModuleRenderer {
 
     private static void drawArmorHud(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
         EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-        String[] labels = {"H", "C", "L", "B"};
-        if (screenHeight < 60) return;
-        int panelWidth = Math.min(85, Math.max(1, screenWidth - 12));
-        int panelHeight = 54;
+        if (screenHeight < 82) return;
+        int panelWidth = Math.min(108, Math.max(1, screenWidth - 12));
+        int panelHeight = 76;
         int x = Math.max(6, screenWidth - panelWidth - 6);
         int y = 6;
         if (panelWidth < 50 || panelHeight < 20) return;
@@ -190,7 +217,7 @@ public final class HudModuleRenderer {
 
         for (int index = 0; index < slots.length; index++) {
             ItemStack stack = client.player.getItemBySlot(slots[index]);
-            int rowY = y + 4 + index * Math.max(8, (panelHeight - 8) / 4);
+            int rowY = y + 4 + index * 18;
             String value = stack.isEmpty() || stack.getMaxDamage() <= 0
                     ? "--"
                     : Integer.toString(Math.max(0, 100 - Math.round(stack.getDamageValue() * 100.0f / stack.getMaxDamage()))) + "%";
@@ -200,15 +227,16 @@ public final class HudModuleRenderer {
                     ? RED
                     : stack.getDamageValue() * 100.0f / stack.getMaxDamage() >= 55.0f ? YELLOW : GREEN;
 
-            graphics.text(client.font, Component.literal(labels[index]), x + 5, rowY, MUTED);
-            int barX = x + 18;
-            int barWidth = Math.max(4, panelWidth - 46);
+            if (!stack.isEmpty()) graphics.item(stack, x + 4, rowY - 4);
+            else graphics.text(client.font, Component.literal("·"), x + 9, rowY, MUTED);
+            int barX = x + 24;
+            int barWidth = Math.max(4, panelWidth - 66);
             graphics.fill(barX, rowY + 2, barX + barWidth, rowY + 8, 0xFF303844);
             if (!stack.isEmpty() && stack.getMaxDamage() > 0) {
                 float remaining = Math.max(0.0f, 1.0f - stack.getDamageValue() / (float) stack.getMaxDamage());
                 graphics.fill(barX, rowY + 2, barX + Math.max(1, Math.round(barWidth * remaining)), rowY + 8, color);
             }
-            if (panelWidth >= 70) graphics.text(client.font, Component.literal(value), x + panelWidth - client.font.width(value) - 4, rowY, color);
+            graphics.text(client.font, Component.literal(value), x + panelWidth - client.font.width(value) - 4, rowY, color);
         }
     }
 

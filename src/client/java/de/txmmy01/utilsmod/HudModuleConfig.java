@@ -58,6 +58,17 @@ public final class HudModuleConfig {
         set("cps.enabled", enabled);
     }
 
+    public static boolean isPingHudEnabled() { return get("ping_hud.enabled"); }
+    public static void setPingHudEnabled(boolean enabled) { set("ping_hud.enabled", enabled); }
+    public static boolean isBiomeHudEnabled() { return get("biome_hud.enabled"); }
+    public static void setBiomeHudEnabled(boolean enabled) { set("biome_hud.enabled", enabled); }
+    public static boolean isSpeedHudEnabled() { return get("speed_hud.enabled"); }
+    public static void setSpeedHudEnabled(boolean enabled) { set("speed_hud.enabled", enabled); }
+    public static boolean isWorldTimeHudEnabled() { return get("world_time_hud.enabled"); }
+    public static void setWorldTimeHudEnabled(boolean enabled) { set("world_time_hud.enabled", enabled); }
+    public static boolean isHungerHudEnabled() { return get("hunger_hud.enabled"); }
+    public static void setHungerHudEnabled(boolean enabled) { set("hunger_hud.enabled", enabled); }
+
     private static boolean get(String key) {
         return Boolean.parseBoolean(VALUES.getProperty(key, "false"));
     }
