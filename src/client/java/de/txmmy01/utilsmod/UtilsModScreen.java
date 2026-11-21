@@ -68,8 +68,7 @@ public final class UtilsModScreen extends Screen {
                     moduleState("screen.utilsmod.fullbright", VisualModuleConfig.isFullbrightEnabled()),
                     button -> {
                         boolean enabled = !VisualModuleConfig.isFullbrightEnabled();
-                        VisualModuleConfig.setFullbrightEnabled(enabled, minecraft.options.gamma().get());
-                        FullbrightModule.update(minecraft);
+                        VisualModuleConfig.setFullbrightEnabled(enabled);
                         rebuildWidgets();
                     }
             ).bounds(contentX + 18, 140, moduleWidth, 24).build());
