@@ -44,6 +44,12 @@ public final class HudModuleConfig {
         set("fps_hud.enabled", enabled);
     }
 
+    public static boolean isCoordinatesEnabled() { return get("coordinates.enabled"); }
+    public static void setCoordinatesEnabled(boolean enabled) { set("coordinates.enabled", enabled); }
+
+    public static boolean isDirectionEnabled() { return get("direction.enabled"); }
+    public static void setDirectionEnabled(boolean enabled) { set("direction.enabled", enabled); }
+
     public static boolean isCpsEnabled() {
         return get("cps.enabled");
     }
