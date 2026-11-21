@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
-    @Inject(method = "onPress", at = @At("HEAD"))
+    @Inject(method = "onButton", at = @At("HEAD"))
     private void utilsmod$trackMouseClick(long window, int button, int action, int modifiers, CallbackInfo callback) {
         HudModuleRenderer.onMouseClick(button, action);
     }
