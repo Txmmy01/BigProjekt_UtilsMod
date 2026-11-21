@@ -170,8 +170,7 @@ public final class UtilsModScreen extends Screen {
     private void drawModules(GuiGraphicsExtractor graphics, int x, int contentWidth) {
         graphics.fill(x + 18, 100, x + contentWidth - 18, 184, animated(PANEL_LIGHT));
         graphics.fill(x + 18, 100, x + 21, 184, animated(ACCENT));
-        graphics.text(font, Component.translatable("screen.utilsmod.module_library"), x + 32, 84, animated(TEXT));
-        graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 172, animated(MUTED));
+        graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 84, animated(MUTED));
         graphics.text(font, Component.literal("BLOCKGLOW"), x + 32, 124, animated(TEXT));
         graphics.text(font, Component.translatable("screen.utilsmod.blockglow_description"), x + 32, 140, animated(MUTED));
         if (minecraft.level != null) {
