@@ -180,8 +180,9 @@ public final class HudModuleRenderer {
     private static void drawArmorHud(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
         EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         String[] labels = {"H", "C", "L", "B"};
+        if (screenHeight < 60) return;
         int panelWidth = Math.min(85, Math.max(1, screenWidth - 12));
-        int panelHeight = Math.min(54, Math.max(1, screenHeight - 12));
+        int panelHeight = 54;
         int x = Math.max(6, screenWidth - panelWidth - 6);
         int y = 6;
         if (panelWidth < 50 || panelHeight < 20) return;

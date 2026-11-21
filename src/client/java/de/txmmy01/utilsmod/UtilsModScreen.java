@@ -25,16 +25,14 @@ public final class UtilsModScreen extends Screen {
         clearWidgets();
 
         int rowCount = visibleRowCount();
-        int closeY = Math.max(0, height - 30);
-        int available = Math.max(14, closeY - 88 - 8);
-        buttonHeight = Math.clamp((available - Math.max(0, rowCount - 1) * 4) / Math.max(1, rowCount), 14, 22);
-        buttonStep = buttonHeight + 4;
+        int top = 76;
+        int closeY = Math.max(0, height - 24);
+        int available = Math.max(0, closeY - top - 8);
+        buttonHeight = Math.clamp((available - Math.max(0, rowCount - 1) * 2) / Math.max(1, rowCount), 8, 22);
+        buttonStep = buttonHeight + 2;
 
         int buttonWidth = Math.max(1, Math.min(220, width - 32));
         int left = (width - buttonWidth) / 2;
-        int totalRowsHeight = rowCount * buttonHeight + Math.max(0, rowCount - 1) * 4;
-        int preferredTop = Math.max(78, Math.min(96, height / 4));
-        int top = Math.max(70, Math.min(preferredTop, closeY - totalRowsHeight - 8));
 
         if (page != Page.DASHBOARD) {
             addRenderableWidget(Button.builder(Component.literal("‹ Back"), button -> {
@@ -87,7 +85,7 @@ public final class UtilsModScreen extends Screen {
         return switch (page) {
             case DASHBOARD -> 2;
             case MODULES -> 3;
-            case MODULE_SETTINGS -> selectedModule.equals("hud") ? 3 : 3;
+            case MODULE_SETTINGS -> 3;
             case SETTINGS -> 1;
         };
     }
