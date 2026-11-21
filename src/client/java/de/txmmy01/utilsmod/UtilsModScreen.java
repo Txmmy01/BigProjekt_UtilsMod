@@ -21,7 +21,6 @@ public final class UtilsModScreen extends Screen {
 
     @Override
     protected void init() {
-        clearWidgets();
         int sidebarWidth = Math.max(112, Math.min(148, width / 5));
         int buttonX = 18;
         int buttonWidth = sidebarWidth - 30;
@@ -38,7 +37,7 @@ public final class UtilsModScreen extends Screen {
                     Component.translatable(animationsEnabled ? "screen.utilsmod.animations_on" : "screen.utilsmod.animations_off"),
                     button -> {
                         animationsEnabled = !animationsEnabled;
-                        setPage(Page.SETTINGS);
+                        rebuildWidgets();
                     }
             ).bounds(sidebarWidth + 28, 156, 190, 28).build());
         }
@@ -51,16 +50,12 @@ public final class UtilsModScreen extends Screen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        graphics.fill(0, 0, width, height, BACKGROUND);
-    }
-
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         int sidebarWidth = Math.max(112, Math.min(148, width / 5));
         int contentX = sidebarWidth + 14;
         int contentWidth = Math.max(180, width - contentX - 18);
         int panelBottom = height - 52;
 
+        graphics.fill(0, 0, width, height, BACKGROUND);
         graphics.fill(0, 0, sidebarWidth, height, 0xFF11161D);
         graphics.fill(sidebarWidth - 2, 0, sidebarWidth, height, ACCENT);
         graphics.fill(contentX, 48, contentX + contentWidth, panelBottom, PANEL);
@@ -76,13 +71,24 @@ public final class UtilsModScreen extends Screen {
             case MODULES -> drawModules(graphics, contentX, contentWidth);
             case SETTINGS -> drawSettings(graphics, contentX, contentWidth);
         }
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
     private void drawDashboard(GuiGraphicsExtractor graphics, int x, int contentWidth) {
+        if (contentWidth < 420) {
+            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), "0", " ");
+            drawCard(graphics, x + 18, 190, contentWidth - 36, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
+            drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "1.0.0", " ");
+            return;
+        }
+
         int cardY = 112;
         int gap = 10;
-        int cardWidth = Math.max(70, (contentWidth - 36 - gap * 2) / 3);
+        int cardWidth = (contentWidth - 36 - gap * 2) / 3;
         drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), "0", " ");
         drawCard(graphics, x + 18 + cardWidth + gap, cardY, cardWidth, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
         drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "1.0.0", " ");
