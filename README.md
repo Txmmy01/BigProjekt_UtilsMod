@@ -3,7 +3,7 @@
 A client-side Fabric utility mod for Minecraft 26.2.
 
 **Author:** Txmmy01  
-**Version:** 2.1.0  
+**Version:** 3.0.0-beta.1  
 **Mod ID:** utilsmod
 
 ## v1.0.0
@@ -36,6 +36,19 @@ A client-side Fabric utility mod for Minecraft 26.2.
 - CPS Counter: left and right mouse clicks per second
 - Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`
 - HUD elements are only rendered while in-world and no screen is open
+
+## v3.0.0 roadmap
+
+The v3 development branch starts from the v2.1 feature set and is planned to add:
+
+- HUD editor with draggable element positioning
+- Per-element size, scale and transparency controls
+- Presets such as PvP, Survival and Minimal
+- One-click profile switching
+- Import and export of HUD profiles
+- A consistent, responsive settings interface
+
+These are planned features, not all implemented in this beta branch yet.
 
 ## Build
 
