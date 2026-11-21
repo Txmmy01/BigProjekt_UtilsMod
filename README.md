@@ -22,7 +22,7 @@ A client-side Fabric utility mod for Minecraft 26.2.
 
 ## Added for v2.0.0
 
-- Fullbright: independently toggles maximum vanilla gamma and restores the previous gamma setting when disabled
+- Fullbright: overrides the client lightmap so dark areas are fully illuminated without changing block textures
 - Clear Lava: removes camera-submersion fog while the camera is in lava
 - Clear Water: removes camera-submersion fog while the camera is underwater
 - Independent module toggles in the GUI
