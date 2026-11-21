@@ -123,7 +123,7 @@ public final class HudModuleRenderer {
             }
         }
         if (HudModuleConfig.isBiomeHudEnabled()) {
-            String biome = client.level.getBiome(client.player.blockPosition()).value().getName().getString();
+            String biome = client.level.getBiome(client.player.blockPosition()).unwrapKey().map(Object::toString).orElse("unknown");
             drawInfoLine(graphics, client, "BIOME  " + biome, infoY, width);
             infoY += 19;
         }
@@ -133,7 +133,7 @@ public final class HudModuleRenderer {
             infoY += 19;
         }
         if (HudModuleConfig.isWorldTimeHudEnabled()) {
-            long dayTime = Math.floorMod(client.level.getDayTime(), 24000L);
+            long dayTime = Math.floorMod(client.level.getLevelData().getDayTime(), 24000L);
             int hours = (int) ((dayTime / 1000 + 6) % 24);
             int minutes = (int) (dayTime % 1000 * 60 / 1000);
             drawInfoLine(graphics, client, String.format(java.util.Locale.ROOT, "TIME  %02d:%02d", hours, minutes), infoY, width);
