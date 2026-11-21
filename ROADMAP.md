@@ -1,27 +1,40 @@
 # UtilsMod Roadmap
 
-## v2.0.0 implementation
+## Implementiert
 
-- [x] Fullbright with independent toggle and lightmap override
-- [x] Clear Lava with independent toggle
-- [x] Clear Water with independent toggle
-- [x] Persistent settings for all three modules
-- [x] GUI controls and dashboard module count
-
-## v2.1.0 implementation
-
-- [x] Compact Armor HUD with four durability bars
-- [x] Compact Potion Bars with effect name, remaining time and duration bar
+- [x] BlockGlow mit konfigurierbaren Blöcken, Farben und Dimensionen
+- [x] Fullbright
+- [x] Clear Water und Clear Lava
+- [x] Armor HUD
+- [x] Potion Bars
 - [x] FPS HUD
-- [x] Left and right CPS counter
-- [x] Independent toggles and persistent HUD configuration
-- [ ] In-game layout and multiplayer smoke test
+- [x] CPS Counter
+- [x] Persistente Modulkonfigurationen
 
-## Later candidates
+## Wartungsarbeiten in Pull Request #3
+
+- [x] BlockGlow-Suche in nächster-Nachbar-Reihenfolge
+- [x] CPS-Erfassung über Mausereignisse
+- [x] Sichere Konfigurationsspeicherung
+- [x] GUI-Scrollfunktion für die Blockliste
+- [x] Persistente UI-Animationseinstellung
+- [x] Potion-Balken anhand beobachteter Effektlaufzeit
+- [x] Kollisionssichere Dimensionseinstellungsschlüssel
+- [x] CI-Build für Pull Requests
+
+## Vor dem nächsten Release
+
+- [ ] Ingame-Test auf Minecraft 26.2
+- [ ] GUI-Test bei kleinen und großen Auflösungen
+- [ ] Test in mehreren Dimensionen
+- [ ] Test mit weiteren Rendering- und HUD-Mods
+- [ ] Automatisierte Tests für Konfigurationslogik ergänzen
+
+## Spätere Ideen
 
 - Keystrokes
 - Ping HUD
-- Coordinates HUD
+- Koordinaten-HUD
 - Item Counter
 - Toggle Sprint
-- FPS graph and performance monitor
+- FPS-Verlauf und Performance-Monitor
