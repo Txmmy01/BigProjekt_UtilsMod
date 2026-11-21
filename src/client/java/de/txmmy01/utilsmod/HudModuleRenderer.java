@@ -116,7 +116,7 @@ public final class HudModuleRenderer {
         }
 
         if (HudModuleConfig.isPotionBarsEnabled()) {
-            drawPotionBars(graphics, client, width, graphics.guiHeight());
+            drawPotionBars(graphics, client, width, graphics.guiHeight(), infoY + (HudModuleConfig.isDirectionEnabled() ? 19 : 0));
         }
 
         if (HudModuleConfig.isArmorHudEnabled()) {
@@ -136,13 +136,13 @@ public final class HudModuleRenderer {
         graphics.text(client.font, Component.literal(visible), 11, y + 4, TEXT);
     }
 
-    private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
+    private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight, int infoOffset) {
         List<MobEffectInstance> effects = new ArrayList<>(client.player.getActiveEffects());
         effects.removeIf(effect -> !effect.showIcon());
         effects.sort((first, second) -> Integer.compare(second.getDuration(), first.getDuration()));
 
         int x = 6;
-        int y = HudModuleConfig.isCpsEnabled() ? 44 : HudModuleConfig.isFpsHudEnabled() ? 25 : 6;
+        int y = Math.max(infoOffset + 19, HudModuleConfig.isCpsEnabled() ? 44 : HudModuleConfig.isFpsHudEnabled() ? 25 : 6);
         int panelWidth = Math.max(1, Math.min(116, screenWidth - 12));
         int rowHeight = 20;
         int visibleRows = Math.max(0, (screenHeight - y - 6) / rowHeight);
