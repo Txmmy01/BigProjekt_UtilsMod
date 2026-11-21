@@ -202,7 +202,6 @@ public final class UtilsModScreen extends Screen {
         graphics.fill(x + 18, 100, x + contentWidth - 18, 166, animated(PANEL_LIGHT));
         graphics.fill(x + 18, 100, x + 21, 166, animated(ACCENT));
         graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 84, animated(MUTED));
-        graphics.text(font, Component.literal("BLOCKGLOW"), x + 32, 124, animated(TEXT));
         if (minecraft.level != null) {
             graphics.text(font, Component.literal("DIMENSION  " + minecraft.level.dimension()), x + contentWidth - 180, 84, animated(MUTED));
         }
