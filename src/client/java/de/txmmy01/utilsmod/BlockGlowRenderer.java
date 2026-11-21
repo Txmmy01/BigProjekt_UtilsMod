@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class BlockGlowRenderer {
     private static final int MAX_HIGHLIGHTS = 160;
-    private static volatile List<BlockPos> highlights = List.of();
+    private static volatile List<Highlight> highlights = List.of();
     private static int ticks;
 
     private BlockGlowRenderer() {
@@ -36,7 +36,7 @@ public final class BlockGlowRenderer {
     }
 
     private static void scan(Minecraft client) {
-        List<BlockPos> found = new ArrayList<>();
+        List<Highlight> found = new ArrayList<>();
         int distance = BlockGlowConfig.getRenderDistance();
         int distanceSquared = distance * distance;
         BlockPos origin = client.player.blockPosition();
@@ -51,7 +51,7 @@ public final class BlockGlowRenderer {
                     if (!client.level.hasChunkAt(cursor)) continue;
                     String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(cursor).getBlock()).toString();
                     if (BlockGlowConfig.isBlockEnabled(dimension, blockId)) {
-                        found.add(cursor.immutable());
+                        found.add(new Highlight(cursor.immutable(), blockId, dimension));
                     }
                 }
             }
@@ -59,18 +59,22 @@ public final class BlockGlowRenderer {
         highlights = List.copyOf(found);
     }
 
+    private record Highlight(BlockPos position, String blockId, String dimension) {
+    }
+
     private static void render() {
         Minecraft client = Minecraft.getInstance();
         if (!BlockGlowConfig.isEnabled() || client.level == null) return;
         String dimension = client.level.dimension().toString();
         float intensity = BlockGlowConfig.getIntensity();
-        for (BlockPos position : highlights) {
-            String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(position).getBlock()).toString();
+        for (Highlight highlight : highlights) {
+            if (!highlight.dimension().equals(dimension)) continue;
+            String blockId = highlight.blockId();
             if (!BlockGlowConfig.isBlockEnabled(dimension, blockId)) continue;
             int color = BlockGlowConfig.getBlockColor(blockId);
             int alpha = Math.min(255, Math.round(((color >>> 24) & 0xFF) * intensity));
             int visibleColor = (color & 0x00FFFFFF) | (alpha << 24);
-            Gizmos.cuboid(position, GizmoStyle.stroke(visibleColor, 1.5f)).setAlwaysOnTop();
+            Gizmos.cuboid(highlight.position(), GizmoStyle.stroke(visibleColor, 1.5f)).setAlwaysOnTop();
         }
     }
 }
