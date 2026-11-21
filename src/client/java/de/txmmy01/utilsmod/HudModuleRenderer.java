@@ -104,26 +104,26 @@ public final class HudModuleRenderer {
         }
 
         if (HudModuleConfig.isPotionBarsEnabled()) {
-            drawPotionBars(graphics, client);
+            drawPotionBars(graphics, client, width, graphics.guiHeight());
         }
 
         if (HudModuleConfig.isArmorHudEnabled()) {
-            drawArmorHud(graphics, client, width);
+            drawArmorHud(graphics, client, width, graphics.guiHeight());
         }
     }
 
-    private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client) {
+    private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
         List<MobEffectInstance> effects = new ArrayList<>(client.player.getActiveEffects());
         effects.removeIf(effect -> !effect.showIcon());
         effects.sort((first, second) -> Integer.compare(second.getDuration(), first.getDuration()));
 
-        int count = Math.min(effects.size(), 5);
-        if (count == 0) return;
-
         int x = 6;
         int y = HudModuleConfig.isCpsEnabled() ? 44 : HudModuleConfig.isFpsHudEnabled() ? 25 : 6;
-        int panelWidth = 116;
+        int panelWidth = Math.max(1, Math.min(116, screenWidth - 12));
         int rowHeight = 20;
+        int visibleRows = Math.max(0, (screenHeight - y - 6) / rowHeight);
+        int count = Math.min(Math.min(effects.size(), 5), visibleRows);
+        if (count == 0 || panelWidth < 52) return;
 
         for (int index = 0; index < count; index++) {
             MobEffectInstance effect = effects.get(index);
@@ -131,9 +131,13 @@ public final class HudModuleRenderer {
             drawPanel(graphics, x, rowY, panelWidth, 17);
 
             String name = effect.getEffect().value().getDisplayName().getString();
-            if (name.length() > 12) name = name.substring(0, 11) + "…";
             int duration = effect.getDuration();
             String time = effect.isInfiniteDuration() ? "∞" : formatDuration(duration);
+            int nameMaxWidth = Math.max(8, panelWidth - client.font.width(time) - 18);
+            while (!name.isEmpty() && client.font.width(name) > nameMaxWidth) {
+                name = name.substring(0, name.length() - 1);
+            }
+            if (!name.equals(effect.getEffect().value().getDisplayName().getString())) name += "…";
             int barColor = effect.getEffect().value().isBeneficial() ? GREEN : RED;
 
             graphics.text(client.font, Component.literal(name), x + 5, rowY + 3, TEXT);
@@ -149,16 +153,19 @@ public final class HudModuleRenderer {
         }
     }
 
-    private static void drawArmorHud(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth) {
+    private static void drawArmorHud(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
         EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         String[] labels = {"H", "C", "L", "B"};
-        int x = Math.max(6, screenWidth - 91);
+        int panelWidth = Math.min(85, Math.max(1, screenWidth - 12));
+        int panelHeight = Math.min(54, Math.max(1, screenHeight - 12));
+        int x = Math.max(6, screenWidth - panelWidth - 6);
         int y = 6;
-        drawPanel(graphics, x, y, 85, 54);
+        if (panelWidth < 50 || panelHeight < 20) return;
+        drawPanel(graphics, x, y, panelWidth, panelHeight);
 
         for (int index = 0; index < slots.length; index++) {
             ItemStack stack = client.player.getItemBySlot(slots[index]);
-            int rowY = y + 5 + index * 12;
+            int rowY = y + 4 + index * Math.max(8, (panelHeight - 8) / 4);
             String value = stack.isEmpty() || stack.getMaxDamage() <= 0
                     ? "--"
                     : Integer.toString(Math.max(0, 100 - Math.round(stack.getDamageValue() * 100.0f / stack.getMaxDamage()))) + "%";
@@ -170,13 +177,13 @@ public final class HudModuleRenderer {
 
             graphics.text(client.font, Component.literal(labels[index]), x + 5, rowY, MUTED);
             int barX = x + 18;
-            int barWidth = 39;
+            int barWidth = Math.max(4, panelWidth - 46);
             graphics.fill(barX, rowY + 2, barX + barWidth, rowY + 8, 0xFF303844);
             if (!stack.isEmpty() && stack.getMaxDamage() > 0) {
                 float remaining = Math.max(0.0f, 1.0f - stack.getDamageValue() / (float) stack.getMaxDamage());
                 graphics.fill(barX, rowY + 2, barX + Math.max(1, Math.round(barWidth * remaining)), rowY + 8, color);
             }
-            graphics.text(client.font, Component.literal(value), x + 61, rowY, color);
+            if (panelWidth >= 70) graphics.text(client.font, Component.literal(value), x + panelWidth - client.font.width(value) - 4, rowY, color);
         }
     }
 
