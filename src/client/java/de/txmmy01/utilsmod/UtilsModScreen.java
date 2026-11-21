@@ -18,6 +18,7 @@ public final class UtilsModScreen extends Screen {
     private int blockListScroll;
     private long pageOpenedAt;
     private Page page = Page.DASHBOARD;
+    private String selectedModule = "blockglow";
     private EditBox searchBox;
     private String activeSearch = "";
 
@@ -40,106 +41,63 @@ public final class UtilsModScreen extends Screen {
         addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.close"), button -> onClose()).bounds(width - 104, height - 38, 86, 22).build());
 
         if (page == Page.MODULES) {
-            addRenderableWidget(Button.builder(
-                    Component.literal("BlockGlow: " + (BlockGlowConfig.isEnabled() ? "ON" : "OFF")),
-                    button -> {
-                        BlockGlowConfig.setEnabled(!BlockGlowConfig.isEnabled());
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 18, 108, 126, 24).build());
-            addRenderableWidget(Button.builder(
-                    Component.literal("Distance: " + BlockGlowConfig.getRenderDistance()),
-                    button -> {
-                        BlockGlowConfig.cycleRenderDistance();
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 152, 108, 112, 24).build());
-            addRenderableWidget(Button.builder(
-                    Component.literal("Intensity: " + BlockGlowConfig.getIntensity()),
-                    button -> {
-                        BlockGlowConfig.cycleIntensity();
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 272, 108, 112, 24).build());
+            int cardWidth = Math.max(90, (contentWidth - 48) / 2);
+            int left = contentX + 18;
+            int right = left + cardWidth + 10;
+            addRenderableWidget(Button.builder(Component.literal("BlockGlow  ›"), button -> openModule("blockglow"))
+                    .bounds(left, 112, cardWidth, 28).build());
+            addRenderableWidget(Button.builder(Component.literal("Visual  ›"), button -> openModule("visual"))
+                    .bounds(right, 112, cardWidth, 28).build());
+            addRenderableWidget(Button.builder(Component.literal("HUD  ›"), button -> openModule("hud"))
+                    .bounds(left, 150, cardWidth, 28).build());
+        }
 
-            int moduleGap = 6;
-            int moduleWidth = Math.max(54, (contentWidth - 36 - moduleGap * 2) / 3);
-            addRenderableWidget(Button.builder(
-                    moduleState("screen.utilsmod.fullbright", VisualModuleConfig.isFullbrightEnabled()),
-                    button -> {
-                        boolean enabled = !VisualModuleConfig.isFullbrightEnabled();
-                        VisualModuleConfig.setFullbrightEnabled(enabled);
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 18, 140, moduleWidth, 24).build());
-            addRenderableWidget(Button.builder(
-                    moduleState("screen.utilsmod.clear_lava", VisualModuleConfig.isClearLavaEnabled()),
-                    button -> {
-                        VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled());
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 18 + moduleWidth + moduleGap, 140, moduleWidth, 24).build());
-            addRenderableWidget(Button.builder(
-                    moduleState("screen.utilsmod.clear_water", VisualModuleConfig.isClearWaterEnabled()),
-                    button -> {
-                        VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled());
-                        rebuildWidgets();
-                    }
-            ).bounds(contentX + 18 + (moduleWidth + moduleGap) * 2, 140, moduleWidth, 24).build());
-
-            int hudButtonWidth = Math.max(72, (contentWidth - 44) / 2);
-            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.armor_hud", HudModuleConfig.isArmorHudEnabled()), button -> {
-                HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled());
-                rebuildWidgets();
-            }).bounds(contentX + 18, 170, hudButtonWidth, 23).build());
-            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.potion_bars", HudModuleConfig.isPotionBarsEnabled()), button -> {
-                HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled());
-                rebuildWidgets();
-            }).bounds(contentX + 26 + hudButtonWidth, 170, hudButtonWidth, 23).build());
-            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.fps_hud", HudModuleConfig.isFpsHudEnabled()), button -> {
-                HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled());
-                rebuildWidgets();
-            }).bounds(contentX + 18, 197, hudButtonWidth, 23).build());
-            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.cps", HudModuleConfig.isCpsEnabled()), button -> {
-                HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled());
-                rebuildWidgets();
-            }).bounds(contentX + 26 + hudButtonWidth, 197, hudButtonWidth, 23).build());
-
-            searchBox = new EditBox(font, contentX + 18, 228, Math.max(80, contentWidth - 126), 24, Component.translatable("screen.utilsmod.search"));
-            searchBox.setHint(Component.translatable("screen.utilsmod.search_hint"));
-            searchBox.setValue(activeSearch);
-            addRenderableWidget(searchBox);
-            addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.apply"), button -> {
-                activeSearch = searchBox.getValue().trim().toLowerCase(Locale.ROOT);
-                blockListScroll = 0;
-                rebuildWidgets();
-            }).bounds(contentX + contentWidth - 98, 228, 80, 24).build());
-
-            int index = 0;
-            int columns = contentWidth >= 560 ? 3 : 2;
-            int visibleRows = Math.max(1, (height - 316) / 29);
-            int itemWidth = Math.max(68, (contentWidth - 36 - (columns - 1) * 8) / columns);
-            for (String blockId : BlockGlowConfig.DEFAULT_BLOCKS.keySet()) {
-                String displayName = blockId.substring("minecraft:".length()).replace('_', ' ');
-                if (!activeSearch.isEmpty() && !displayName.contains(activeSearch) && !blockId.contains(activeSearch)) continue;
-                int column = index % columns;
-                int row = index / columns;
-                index++;
-                if (row < blockListScroll || row >= blockListScroll + visibleRows) continue;
-                int x = contentX + 18 + column * (itemWidth + 8);
-                int y = 264 + (row - blockListScroll) * 29;
-                String dimension = minecraft.level == null ? "minecraft:overworld" : minecraft.level.dimension().toString();
-                boolean selected = BlockGlowConfig.isBlockEnabled(dimension, blockId);
-                int color = BlockGlowConfig.getBlockColor(blockId);
-                String label = (selected ? "ON  " : "OFF ") + displayName;
-                addRenderableWidget(Button.builder(Component.literal(label), button -> {
-                    BlockGlowConfig.toggleBlock(dimension, blockId);
-                    rebuildWidgets();
-                }).bounds(x, y, itemWidth, 24).build());
-                addRenderableWidget(Button.builder(Component.literal("●").withStyle(style -> style.withColor(color)), button -> {
-                    BlockGlowConfig.cycleBlockColor(blockId);
-                    rebuildWidgets();
-                }).bounds(x + itemWidth - 23, y, 20, 24).build());
+        if (page == Page.MODULE_SETTINGS) {
+            addRenderableWidget(Button.builder(Component.literal("‹ Modules"), button -> setPage(Page.MODULES))
+                    .bounds(contentX + 18, 100, 92, 23).build());
+            int left = contentX + 18;
+            int buttonWidth = Math.max(90, Math.min(190, contentWidth - 36));
+            int y = 136;
+            if (selectedModule.equals("blockglow")) {
+                addRenderableWidget(Button.builder(moduleState("BlockGlow", BlockGlowConfig.isEnabled()), button -> {
+                    BlockGlowConfig.setEnabled(!BlockGlowConfig.isEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(Component.literal("Render distance: " + BlockGlowConfig.getRenderDistance()), button -> {
+                    BlockGlowConfig.cycleRenderDistance(); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(Component.literal("Intensity: " + BlockGlowConfig.getIntensity()), button -> {
+                    BlockGlowConfig.cycleIntensity(); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+            } else if (selectedModule.equals("visual")) {
+                addRenderableWidget(Button.builder(moduleState("Fullbright", VisualModuleConfig.isFullbrightEnabled()), button -> {
+                    VisualModuleConfig.setFullbrightEnabled(!VisualModuleConfig.isFullbrightEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("Clear lava", VisualModuleConfig.isClearLavaEnabled()), button -> {
+                    VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("Clear water", VisualModuleConfig.isClearWaterEnabled()), button -> {
+                    VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+            } else if (selectedModule.equals("hud")) {
+                addRenderableWidget(Button.builder(moduleState("Armor HUD", HudModuleConfig.isArmorHudEnabled()), button -> {
+                    HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("Potion bars", HudModuleConfig.isPotionBarsEnabled()), button -> {
+                    HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("FPS HUD", HudModuleConfig.isFpsHudEnabled()), button -> {
+                    HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("CPS", HudModuleConfig.isCpsEnabled()), button -> {
+                    HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
             }
         }
 
@@ -166,7 +124,7 @@ public final class UtilsModScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        if (page != Page.MODULES || mouseY < 252 || verticalAmount == 0) {
+        if (page != Page.MODULE_SETTINGS || !selectedModule.equals("blockglow") || mouseY < 252 || verticalAmount == 0) {
             return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         }
         int sidebarWidth = Math.max(112, Math.min(148, width / 5));
@@ -209,6 +167,7 @@ public final class UtilsModScreen extends Screen {
         switch (page) {
             case DASHBOARD -> drawDashboard(graphics, contentX, contentWidth);
             case MODULES -> drawModules(graphics, contentX, contentWidth);
+            case MODULE_SETTINGS -> drawModuleSettings(graphics, contentX, contentWidth);
             case SETTINGS -> drawSettings(graphics, contentX, contentWidth);
         }
     }
@@ -254,6 +213,23 @@ public final class UtilsModScreen extends Screen {
         if (minecraft.level != null) {
             graphics.text(font, Component.literal("DIMENSION  " + minecraft.level.dimension()), x + contentWidth - 180, 84, animated(MUTED));
         }
+    }
+
+    private void drawModuleSettings(GuiGraphicsExtractor graphics, int x, int contentWidth) {
+        graphics.fill(x + 18, 100, x + contentWidth - 18, height - 52, animated(PANEL_LIGHT));
+        String name = switch (selectedModule) {
+            case "blockglow" -> "BlockGlow";
+            case "visual" -> "Visual";
+            case "hud" -> "HUD";
+            default -> "Module";
+        };
+        graphics.text(font, Component.literal("/modules/" + selectedModule + "/(setting)"), x + 32, 82, animated(MUTED));
+        graphics.text(font, Component.literal(name + " settings"), x + 32, 116, animated(TEXT));
+    }
+
+    private void openModule(String module) {
+        selectedModule = module;
+        setPage(Page.MODULE_SETTINGS);
     }
 
     private void drawSettings(GuiGraphicsExtractor graphics, int x, int contentWidth) {
