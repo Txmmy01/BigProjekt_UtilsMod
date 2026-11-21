@@ -45,7 +45,7 @@ public final class BlockGlowRenderer {
 
         for (int x = -distance; x <= distance && found.size() < MAX_HIGHLIGHTS; x++) {
             for (int y = -distance; y <= distance && found.size() < MAX_HIGHLIGHTS; y++) {
-                for (int z = -distance; z <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; z++) {
+                for (int z = -distance; z <= distance && found.size() < MAX_HIGHLIGHTS; z++) {
                     if (x * x + y * y + z * z > distanceSquared) continue;
                     cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
                     if (!client.level.hasChunkAt(cursor)) continue;
