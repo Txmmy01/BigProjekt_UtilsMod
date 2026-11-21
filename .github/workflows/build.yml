@@ -1,4 +1,4 @@
-name: Build
+name: buildv3
 
 on:
   push:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    name: Build UtilsMod
+    name: Build UtilsMod v3
     runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
@@ -33,6 +33,6 @@ jobs:
       - name: Upload mod JAR
         uses: actions/upload-artifact@v7
         with:
-          name: UtilsMod-${{ github.sha }}
+          name: buildv3-${{ github.sha }}
           path: build/libs/*.jar
           if-no-files-found: error
