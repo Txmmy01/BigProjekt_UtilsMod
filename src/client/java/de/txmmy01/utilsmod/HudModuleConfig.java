@@ -44,6 +44,12 @@ public final class HudModuleConfig {
         set("fps_hud.enabled", enabled);
     }
 
+    public static boolean isCoordinatesEnabled() { return get("coordinates.enabled"); }
+    public static void setCoordinatesEnabled(boolean enabled) { set("coordinates.enabled", enabled); }
+
+    public static boolean isDirectionEnabled() { return get("direction.enabled"); }
+    public static void setDirectionEnabled(boolean enabled) { set("direction.enabled", enabled); }
+
     public static boolean isCpsEnabled() {
         return get("cps.enabled");
     }
@@ -51,6 +57,17 @@ public final class HudModuleConfig {
     public static void setCpsEnabled(boolean enabled) {
         set("cps.enabled", enabled);
     }
+
+    public static boolean isPingHudEnabled() { return get("ping_hud.enabled"); }
+    public static void setPingHudEnabled(boolean enabled) { set("ping_hud.enabled", enabled); }
+    public static boolean isBiomeHudEnabled() { return get("biome_hud.enabled"); }
+    public static void setBiomeHudEnabled(boolean enabled) { set("biome_hud.enabled", enabled); }
+    public static boolean isSpeedHudEnabled() { return get("speed_hud.enabled"); }
+    public static void setSpeedHudEnabled(boolean enabled) { set("speed_hud.enabled", enabled); }
+    public static boolean isWorldTimeHudEnabled() { return get("world_time_hud.enabled"); }
+    public static void setWorldTimeHudEnabled(boolean enabled) { set("world_time_hud.enabled", enabled); }
+    public static boolean isHungerHudEnabled() { return get("hunger_hud.enabled"); }
+    public static void setHungerHudEnabled(boolean enabled) { set("hunger_hud.enabled", enabled); }
 
     private static boolean get(String key) {
         return Boolean.parseBoolean(VALUES.getProperty(key, "false"));
@@ -62,22 +79,10 @@ public final class HudModuleConfig {
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not load HUD module configuration", exception);
-        }
+        ConfigStorage.load(FILE, VALUES, "HUD module");
     }
 
     private static void save() {
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save HUD module configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "HUD module");
     }
 }

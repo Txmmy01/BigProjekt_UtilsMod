@@ -3,7 +3,7 @@
 A client-side Fabric utility mod for Minecraft 26.2.
 
 **Author:** Txmmy01  
-**Version:** 2.1.0  
+**Version:** 3.0.0  
 **Mod ID:** utilsmod
 
 ## v1.0.0
@@ -28,7 +28,24 @@ A client-side Fabric utility mod for Minecraft 26.2.
 - Independent module toggles in the GUI
 - Persistent visual module settings in `config/utilsmod-visual.properties`
 
-## Added for v2.1.0\n\n- Armor HUD: compact four-slot durability bars\n- Potion Bars: compact effect names, remaining time and duration bars\n- FPS HUD: current client FPS\n- CPS Counter: left and right mouse clicks per second\n- Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`\n- HUD elements are only rendered while in-world and no screen is open\n\n## Build
+## Added for v2.1.0
+
+- Armor HUD: compact four-slot durability bars
+- Potion Bars: compact effect names, remaining time and duration bars
+- FPS HUD: current client FPS
+- CPS Counter: left and right mouse clicks per second
+- Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`
+- HUD elements are only rendered while in-world and no screen is open
+
+## Added for v3.0.0
+
+- Coordinates HUD with an independent toggle
+- Direction HUD with an independent toggle
+- Simplified module navigation with compact two-column HUD controls
+- Potion bars appear only for active effects and use each effect's own color
+- GUI layout avoids custom scissor/scroll rendering paths
+
+## Build
 
 The project targets Minecraft 26.2, Fabric Loader, Fabric API and Java 25.
 
@@ -38,8 +55,15 @@ Build with Gradle 9.8.2:
 gradle --no-daemon build
 ```
 
-The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` and development branches, and uploads the JAR as a workflow artifact.
+The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` and pull requests targeting `main`, and uploads the JAR as a workflow artifact.
 
 ## Validation
 
 A successful build confirms compilation and packaging only. An in-game visual test is required to validate rendering behavior in a Minecraft 26.2 client.
+
+
+## v3.0.1
+
+- BlockGlow supports Ancient Debris, Nether Gold Ore and Nether Quartz Ore.
+- Armor HUD renders the actual equipped armor item icons instead of letter abbreviations.
+- Five independent HUD modules: Ping, Biome, Speed, World Time and Hunger.

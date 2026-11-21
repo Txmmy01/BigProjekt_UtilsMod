@@ -20,6 +20,9 @@ public final class BlockGlowConfig {
             Map.entry("minecraft:deepslate_gold_ore", 0xFFFFC44D),
             Map.entry("minecraft:iron_ore", 0xFFCBD5E1),
             Map.entry("minecraft:deepslate_iron_ore", 0xFFCBD5E1),
+            Map.entry("minecraft:nether_gold_ore", 0xFFFFC44D),
+            Map.entry("minecraft:nether_quartz_ore", 0xFFEDE4D1),
+            Map.entry("minecraft:ancient_debris", 0xFFB97855),
             Map.entry("minecraft:spawner", 0xFFB18CFF),
             Map.entry("minecraft:chest", 0xFFFFA45C),
             Map.entry("minecraft:trapped_chest", 0xFFFF725E),
@@ -73,7 +76,9 @@ public final class BlockGlowConfig {
 
     public static boolean isBlockEnabled(String dimension, String blockId) {
         if (!DEFAULT_BLOCKS.containsKey(blockId)) return false;
-        return Boolean.parseBoolean(VALUES.getProperty(key(dimension, blockId, "enabled"), "true"));
+        String currentKey = key(dimension, blockId, "enabled");
+        String legacyKey = "dimension." + dimension.replace(':', '.') + "." + blockId.replace(':', '.') + ".enabled";
+        return Boolean.parseBoolean(VALUES.getProperty(currentKey, VALUES.getProperty(legacyKey, "true")));
     }
 
     public static void toggleBlock(String dimension, String blockId) {
@@ -81,6 +86,7 @@ public final class BlockGlowConfig {
     }
 
     public static void setBlockEnabled(String dimension, String blockId, boolean value) {
+        if (!DEFAULT_BLOCKS.containsKey(blockId)) return;
         VALUES.setProperty(key(dimension, blockId, "enabled"), Boolean.toString(value));
         save();
     }
@@ -90,6 +96,7 @@ public final class BlockGlowConfig {
     }
 
     public static void cycleBlockColor(String blockId) {
+        if (!DEFAULT_BLOCKS.containsKey(blockId)) return;
         int[] palette = {0xFFFF8A32, 0xFF35D8FF, 0xFF55E68A, 0xFFFFC44D, 0xFFB18CFF, 0xFFFF647C};
         int current = getBlockColor(blockId);
         int next = palette[0];
@@ -99,36 +106,30 @@ public final class BlockGlowConfig {
                 break;
             }
         }
-        VALUES.setProperty("color." + blockId, String.format("#%08X", next));
+        VALUES.setProperty("color." + blockId, String.format(java.util.Locale.ROOT, "#%08X", next));
         save();
     }
 
     public static String dimensionKey(String dimension) {
-        return dimension.replace(':', '.');
+        return ConfigValues.dimensionKey(dimension);
     }
 
     private static String key(String dimension, String blockId, String setting) {
-        return "dimension." + dimensionKey(dimension) + "." + blockId.replace(':', '.') + "." + setting;
+        return "dimension64." + dimensionKey(dimension) + "." + dimensionKey(blockId) + "." + setting;
     }
 
     private static int parseColor(String value, int fallback) {
-        if (value == null) return fallback;
-        try {
-            return (int) Long.parseLong(value.replace("#", ""), 16);
-        } catch (NumberFormatException exception) {
-            return fallback;
-        }
+        return ConfigValues.parseColor(value, fallback);
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
+        ConfigStorage.load(FILE, VALUES, "UtilsMod");
+        try {
             enabled = Boolean.parseBoolean(VALUES.getProperty("blockglow.enabled", "false"));
-            renderDistance = Math.clamp(Integer.parseInt(VALUES.getProperty("blockglow.distance", "16")), 8, 32);
-            intensity = Math.clamp(Float.parseFloat(VALUES.getProperty("blockglow.intensity", "1.0")), 0.5f, 2.0f);
-        } catch (IOException | NumberFormatException exception) {
-            UtilsModClient.LOGGER.error("Could not load UtilsMod configuration", exception);
+            renderDistance = ConfigValues.parseDistance(VALUES.getProperty("blockglow.distance"), 16);
+            intensity = ConfigValues.parseIntensity(VALUES.getProperty("blockglow.intensity"), 1.0f);
+        } catch (RuntimeException exception) {
+            UtilsModClient.LOGGER.error("Could not parse UtilsMod configuration values", exception);
         }
     }
 
@@ -136,13 +137,6 @@ public final class BlockGlowConfig {
         VALUES.setProperty("blockglow.enabled", Boolean.toString(enabled));
         VALUES.setProperty("blockglow.distance", Integer.toString(renderDistance));
         VALUES.setProperty("blockglow.intensity", Float.toString(intensity));
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save UtilsMod configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "UtilsMod");
     }
 }

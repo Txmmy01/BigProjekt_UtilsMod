@@ -1,27 +1,37 @@
 # UtilsMod Roadmap
 
-## v2.0.0 implementation
+## v3.0.0 – prepared implementation
 
-- [x] Fullbright with independent toggle and lightmap override
-- [x] Clear Lava with independent toggle
-- [x] Clear Water with independent toggle
-- [x] Persistent settings for all three modules
-- [x] GUI controls and dashboard module count
+- [x] BlockGlow performance and configuration hardening
+- [x] CPS tracking from mouse input events
+- [x] Potion bars only for active effects, including infinite effects
+- [x] Potion bar colors match the corresponding effect
+- [x] Coordinates HUD with independent persistent toggle
+- [x] Direction HUD with independent persistent toggle
+- [x] Simplified GUI navigation and compact two-column HUD controls
+- [x] Java 25 / Minecraft 26.2 CI build
 
-## v2.1.0 implementation
+## Release validation still required
 
-- [x] Compact Armor HUD with four durability bars
-- [x] Compact Potion Bars with effect name, remaining time and duration bar
-- [x] FPS HUD
-- [x] Left and right CPS counter
-- [x] Independent toggles and persistent HUD configuration
-- [ ] In-game layout and multiplayer smoke test
+- [ ] Launch the mod in a Minecraft 26.2 client
+- [ ] Check GUI at small and large window sizes
+- [ ] Check potion bars with short, long and infinite effects
+- [ ] Check coordinates and direction HUD in multiple dimensions
+- [ ] Check compatibility with other rendering and HUD mods
 
-## Later candidates
+## v3.x ideas
 
-- Keystrokes
-- Ping HUD
-- Coordinates HUD
-- Item Counter
-- Toggle Sprint
-- FPS graph and performance monitor
+- Drag-and-drop HUD editor with live preview
+- HUD profiles (PvP, Survival, Minimal)
+- Per-element scale, opacity and screen anchoring
+- Keystrokes and Ping HUD
+- Item counter and Toggle Sprint
+- FPS history and performance monitor
+
+
+## v3.0.1
+
+- [x] Ancient Debris and Nether ore highlights.
+- [x] Item-icon Armor HUD.
+- [x] Ping, Biome, Speed, World Time and Hunger HUD modules.
+- [ ] Validate all additions in Minecraft 26.2 in-game.
