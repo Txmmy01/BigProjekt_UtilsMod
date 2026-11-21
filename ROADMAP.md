@@ -1,40 +1,29 @@
 # UtilsMod Roadmap
 
-## Implementiert
+## v3.0.0 – prepared implementation
 
-- [x] BlockGlow mit konfigurierbaren Blöcken, Farben und Dimensionen
-- [x] Fullbright
-- [x] Clear Water und Clear Lava
-- [x] Armor HUD
-- [x] Potion Bars
-- [x] FPS HUD
-- [x] CPS Counter
-- [x] Persistente Modulkonfigurationen
+- [x] BlockGlow performance and configuration hardening
+- [x] CPS tracking from mouse input events
+- [x] Potion bars only for active effects, including infinite effects
+- [x] Potion bar colors match the corresponding effect
+- [x] Coordinates HUD with independent persistent toggle
+- [x] Direction HUD with independent persistent toggle
+- [x] Simplified GUI navigation and compact two-column HUD controls
+- [x] Java 25 / Minecraft 26.2 CI build
 
-## Wartungsarbeiten in Pull Request #3
+## Release validation still required
 
-- [x] BlockGlow-Suche in nächster-Nachbar-Reihenfolge
-- [x] CPS-Erfassung über Mausereignisse
-- [x] Sichere Konfigurationsspeicherung
-- [x] GUI-Scrollfunktion für die Blockliste
-- [x] Persistente UI-Animationseinstellung
-- [x] Potion-Balken anhand beobachteter Effektlaufzeit
-- [x] Kollisionssichere Dimensionseinstellungsschlüssel
-- [x] CI-Build für Pull Requests
+- [ ] Launch the mod in a Minecraft 26.2 client
+- [ ] Check GUI at small and large window sizes
+- [ ] Check potion bars with short, long and infinite effects
+- [ ] Check coordinates and direction HUD in multiple dimensions
+- [ ] Check compatibility with other rendering and HUD mods
 
-## Vor dem nächsten Release
+## v3.x ideas
 
-- [ ] Ingame-Test auf Minecraft 26.2
-- [ ] GUI-Test bei kleinen und großen Auflösungen
-- [ ] Test in mehreren Dimensionen
-- [ ] Test mit weiteren Rendering- und HUD-Mods
-- [ ] Automatisierte Tests für Konfigurationslogik ergänzen
-
-## Spätere Ideen
-
-- Keystrokes
-- Ping HUD
-- Koordinaten-HUD
-- Item Counter
-- Toggle Sprint
-- FPS-Verlauf und Performance-Monitor
+- Drag-and-drop HUD editor with live preview
+- HUD profiles (PvP, Survival, Minimal)
+- Per-element scale, opacity and screen anchoring
+- Keystrokes and Ping HUD
+- Item counter and Toggle Sprint
+- FPS history and performance monitor
