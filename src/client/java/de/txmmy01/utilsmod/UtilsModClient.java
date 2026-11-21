@@ -27,6 +27,7 @@ public final class UtilsModClient implements ClientModInitializer {
                 category
         ));
         ClientTickEvents.END_CLIENT_TICK.register(UtilsModClient::handleKeyInput);
+        BlockGlowRenderer.register();
         LOGGER.info("UtilsMod {} initialized", "1.0.0");
     }
 
