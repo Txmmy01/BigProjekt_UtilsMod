@@ -28,7 +28,16 @@ A client-side Fabric utility mod for Minecraft 26.2.
 - Independent module toggles in the GUI
 - Persistent visual module settings in `config/utilsmod-visual.properties`
 
-## Added for v2.1.0\n\n- Armor HUD: compact four-slot durability bars\n- Potion Bars: compact effect names, remaining time and duration bars\n- FPS HUD: current client FPS\n- CPS Counter: left and right mouse clicks per second\n- Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`\n- HUD elements are only rendered while in-world and no screen is open\n\n## Build
+## Added for v2.1.0
+
+- Armor HUD: compact four-slot durability bars
+- Potion Bars: compact effect names, remaining time and duration bars
+- FPS HUD: current client FPS
+- CPS Counter: left and right mouse clicks per second
+- Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`
+- HUD elements are only rendered while in-world and no screen is open
+
+## Build
 
 The project targets Minecraft 26.2, Fabric Loader, Fabric API and Java 25.
 
@@ -38,7 +47,7 @@ Build with Gradle 9.8.2:
 gradle --no-daemon build
 ```
 
-The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` and development branches, and uploads the JAR as a workflow artifact.
+The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` and pull requests targeting `main`, and uploads the JAR as a workflow artifact.
 
 ## Validation
 
