@@ -45,9 +45,7 @@ public final class HudModuleRenderer {
     }
 
     private static void tick(Minecraft client) {
-        if (client.player == null || client.level == null) {
-            leftWasDown = false;
-            rightWasDown = false;
+        if (client.player == null || client.level == null || !HudModuleConfig.isCpsEnabled()) {
             leftClicks = 0;
             rightClicks = 0;
             leftCps = 0;
@@ -55,28 +53,6 @@ public final class HudModuleRenderer {
             cpsWindowStart = System.nanoTime();
             return;
         }
-
-        if (!HudModuleConfig.isCpsEnabled()) {
-            leftWasDown = false;
-            rightWasDown = false;
-            leftClicks = 0;
-            rightClicks = 0;
-            leftCps = 0;
-            rightCps = 0;
-            cpsWindowStart = System.nanoTime();
-            return;
-        }
-
-        long window = client.getWindow().handle();
-        boolean leftDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS;
-        boolean rightDown = GLFW.glfwGetMouseButton(window, GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
-
-        if (leftDown && !leftWasDown) leftClicks++;
-        if (rightDown && !rightWasDown) rightClicks++;
-
-        leftWasDown = leftDown;
-        rightWasDown = rightDown;
-
         long now = System.nanoTime();
         if (now - cpsWindowStart >= 1_000_000_000L) {
             leftCps = leftClicks;
@@ -85,6 +61,14 @@ public final class HudModuleRenderer {
             rightClicks = 0;
             cpsWindowStart = now;
         }
+    }
+
+    public static void onMouseClick(int button, int action) {
+        if (action != GLFW.GLFW_PRESS || !HudModuleConfig.isCpsEnabled()) return;
+        Minecraft client = Minecraft.getInstance();
+        if (client.player == null || client.level == null) return;
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) leftClicks++;
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) rightClicks++;
     }
 
     private static void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
