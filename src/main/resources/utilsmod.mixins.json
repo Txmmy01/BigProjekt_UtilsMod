@@ -5,6 +5,7 @@
   "client": [
     "FullbrightMixin",
     "MouseHandlerMixin",
+    "ScoreboardLayoutMixin",
     "FogRendererMixin"
   ],
   "injectors": {
