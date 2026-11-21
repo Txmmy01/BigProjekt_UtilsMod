@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "utilsmod",
+  "version": "${version}",
+  "name": "UtilsMod",
+  "description": "A modular client-side utility mod with configurable block highlights.",
+  "authors": [
+    "Txmmy01"
+  ],
+  "contact": {
+    "sources": "https://github.com/Txmmy01/BigProjekt_UtilsMod"
+  },
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "de.txmmy01.utilsmod.UtilsModClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
