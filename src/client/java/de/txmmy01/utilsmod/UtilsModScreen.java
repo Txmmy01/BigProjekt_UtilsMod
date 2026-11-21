@@ -41,15 +41,14 @@ public final class UtilsModScreen extends Screen {
         addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.close"), button -> onClose()).bounds(width - 104, height - 38, 86, 22).build());
 
         if (page == Page.MODULES) {
-            int cardWidth = Math.max(90, (contentWidth - 48) / 2);
+            int cardWidth = Math.max(80, contentWidth - 36);
             int left = contentX + 18;
-            int right = left + cardWidth + 10;
             addRenderableWidget(Button.builder(Component.literal("BlockGlow  ›"), button -> openModule("blockglow"))
                     .bounds(left, 112, cardWidth, 28).build());
             addRenderableWidget(Button.builder(Component.literal("Visual  ›"), button -> openModule("visual"))
-                    .bounds(right, 112, cardWidth, 28).build());
-            addRenderableWidget(Button.builder(Component.literal("HUD  ›"), button -> openModule("hud"))
                     .bounds(left, 150, cardWidth, 28).build());
+            addRenderableWidget(Button.builder(Component.literal("HUD  ›"), button -> openModule("hud"))
+                    .bounds(left, 188, cardWidth, 28).build());
         }
 
         if (page == Page.MODULE_SETTINGS) {
