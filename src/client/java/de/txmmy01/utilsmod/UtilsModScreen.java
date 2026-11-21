@@ -211,9 +211,9 @@ public final class UtilsModScreen extends Screen {
         int cardY = 112;
         int gap = 10;
         int cardWidth = (contentWidth - 36 - gap * 2) / 3;
-        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "4 modules");
+        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "8 modules");
         drawCard(graphics, x + 18 + cardWidth + gap, cardY, cardWidth, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
-        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "2.0.0", " ");
+        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "2.1.0", " ");
         graphics.text(font, Component.translatable("screen.utilsmod.welcome"), x + 20, 216, TEXT);
         graphics.text(font, Component.translatable("screen.utilsmod.welcome_description"), x + 20, 236, MUTED);
         graphics.text(font, Component.translatable("screen.utilsmod.next_step"), x + 20, 274, ACCENT);
