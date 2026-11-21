@@ -132,6 +132,9 @@ public final class BlockGlowConfig {
     }
 
     private static void save() {
+        VALUES.setProperty("blockglow.enabled", Boolean.toString(enabled));
+        VALUES.setProperty("blockglow.distance", Integer.toString(renderDistance));
+        VALUES.setProperty("blockglow.intensity", Float.toString(intensity));
         ConfigStorage.save(FILE, VALUES, "UtilsMod");
     }
 }
