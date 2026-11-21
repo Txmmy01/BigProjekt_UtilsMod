@@ -73,7 +73,9 @@ public final class BlockGlowConfig {
 
     public static boolean isBlockEnabled(String dimension, String blockId) {
         if (!DEFAULT_BLOCKS.containsKey(blockId)) return false;
-        return Boolean.parseBoolean(VALUES.getProperty(key(dimension, blockId, "enabled"), "true"));
+        String currentKey = key(dimension, blockId, "enabled");
+        String legacyKey = "dimension." + dimension.replace(':', '.') + "." + blockId.replace(':', '.') + ".enabled";
+        return Boolean.parseBoolean(VALUES.getProperty(currentKey, VALUES.getProperty(legacyKey, "true")));
     }
 
     public static void toggleBlock(String dimension, String blockId) {
@@ -81,6 +83,7 @@ public final class BlockGlowConfig {
     }
 
     public static void setBlockEnabled(String dimension, String blockId, boolean value) {
+        if (!DEFAULT_BLOCKS.containsKey(blockId)) return;
         VALUES.setProperty(key(dimension, blockId, "enabled"), Boolean.toString(value));
         save();
     }
@@ -99,38 +102,30 @@ public final class BlockGlowConfig {
                 break;
             }
         }
-        VALUES.setProperty("color." + blockId, String.format("#%08X", next));
+        VALUES.setProperty("color." + blockId, String.format(java.util.Locale.ROOT, "#%08X", next));
         save();
     }
 
     public static String dimensionKey(String dimension) {
-        return dimension.replace(':', '.');
+        return java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(dimension.getBytes(java.nio.charset.StandardCharsets.UTF_8));
     }
 
     private static String key(String dimension, String blockId, String setting) {
-        String encodedDimension = java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(dimension.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        String encodedBlock = java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(blockId.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        return "dimension64." + encodedDimension + "." + encodedBlock + "." + setting;
+        return "dimension64." + dimensionKey(dimension) + "." + dimensionKey(blockId) + "." + setting;
     }
 
     private static int parseColor(String value, int fallback) {
-        if (value == null) return fallback;
-        try {
-            return (int) Long.parseLong(value.replace("#", ""), 16);
-        } catch (NumberFormatException exception) {
-            return fallback;
-        }
+        return ConfigValues.parseColor(value, fallback);
     }
 
     private static void load() {
         ConfigStorage.load(FILE, VALUES, "UtilsMod");
         try {
             enabled = Boolean.parseBoolean(VALUES.getProperty("blockglow.enabled", "false"));
-            renderDistance = Math.clamp(Integer.parseInt(VALUES.getProperty("blockglow.distance", "16")), 8, 32);
-            intensity = Math.clamp(Float.parseFloat(VALUES.getProperty("blockglow.intensity", "1.0")), 0.5f, 2.0f);
-        } catch (NumberFormatException exception) {
+            renderDistance = ConfigValues.parseDistance(VALUES.getProperty("blockglow.distance"), 16);
+            intensity = ConfigValues.parseIntensity(VALUES.getProperty("blockglow.intensity"), 1.0f);
+        } catch (RuntimeException exception) {
             UtilsModClient.LOGGER.error("Could not parse UtilsMod configuration values", exception);
         }
     }
