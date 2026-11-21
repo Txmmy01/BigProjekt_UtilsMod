@@ -29,7 +29,7 @@ public final class BlockGlowConfig {
 
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("utilsmod.properties");
     private static final Properties VALUES = new Properties();
-    private static boolean enabled = true;
+    private static boolean enabled;
     private static int renderDistance = 16;
     private static float intensity = 1.0f;
 
@@ -125,7 +125,7 @@ public final class BlockGlowConfig {
         if (!Files.exists(FILE)) return;
         try (Reader reader = Files.newBufferedReader(FILE)) {
             VALUES.load(reader);
-            enabled = Boolean.parseBoolean(VALUES.getProperty("blockglow.enabled", "true"));
+            enabled = Boolean.parseBoolean(VALUES.getProperty("blockglow.enabled", "false"));
             renderDistance = Math.clamp(Integer.parseInt(VALUES.getProperty("blockglow.distance", "16")), 8, 32);
             intensity = Math.clamp(Float.parseFloat(VALUES.getProperty("blockglow.intensity", "1.0")), 0.5f, 2.0f);
         } catch (IOException | NumberFormatException exception) {
