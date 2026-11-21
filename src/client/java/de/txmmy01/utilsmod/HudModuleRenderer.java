@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -22,7 +21,6 @@ public final class HudModuleRenderer {
     private static final int PANEL_BORDER = 0xFF343D49;
     private static final int TEXT = 0xFFF4F6FA;
     private static final int MUTED = 0xFF9BA6B5;
-    private static final int ACCENT = 0xFFFF8A32;
     private static final int GREEN = 0xFF55D68A;
     private static final int YELLOW = 0xFFFFC44D;
     private static final int RED = 0xFFFF647C;
@@ -144,7 +142,7 @@ public final class HudModuleRenderer {
             int barX = x + 5;
             int barY = rowY + 13;
             int barWidth = panelWidth - 10;
-            graphics.fill(barX, barY, barX + barWidth, barY + 15, 0xFF303844);
+            graphics.fill(barX, barY, barX + barWidth, barY + 2, 0xFF303844);
             float progress = effect.isInfiniteDuration() ? 1.0f : Math.min(1.0f, duration / 3600.0f);
             graphics.fill(barX, barY, barX + Math.max(1, Math.round(barWidth * progress)), barY + 2, barColor);
         }
