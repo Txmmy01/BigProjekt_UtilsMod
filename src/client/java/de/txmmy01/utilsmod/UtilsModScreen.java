@@ -265,6 +265,7 @@ public final class UtilsModScreen extends Screen {
     private enum Page {
         DASHBOARD("screen.utilsmod.dashboard"),
         MODULES("screen.utilsmod.modules"),
+        MODULE_SETTINGS("screen.utilsmod.modules"),
         SETTINGS("screen.utilsmod.settings");
 
         private final String titleKey;
