@@ -93,6 +93,7 @@ public final class BlockGlowConfig {
     }
 
     public static void cycleBlockColor(String blockId) {
+        if (!DEFAULT_BLOCKS.containsKey(blockId)) return;
         int[] palette = {0xFFFF8A32, 0xFF35D8FF, 0xFF55E68A, 0xFFFFC44D, 0xFFB18CFF, 0xFFFF647C};
         int current = getBlockColor(blockId);
         int next = palette[0];
