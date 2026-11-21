@@ -16,13 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class HudModuleRenderer {
-    private static final int PANEL = 0xB810141B;
-    private static final int PANEL_BORDER = 0xFF343D49;
-    private static final int TEXT = 0xFFF4F6FA;
-    private static final int MUTED = 0xFF9BA6B5;
-    private static final int GREEN = 0xFF55D68A;
-    private static final int YELLOW = 0xFFFFC44D;
-    private static final int RED = 0xFFFF647C;
+    private static final int PANEL = 0xD9090909;
+    private static final int PANEL_BORDER = 0xFF777777;
+    private static final int TEXT = 0xFFFFFFFF;
+    private static final int MUTED = 0xFFB8B8B8;
+    private static final int GREEN = 0xFFFFFFFF;
+    private static final int YELLOW = 0xFFD0D0D0;
+    private static final int RED = 0xFF888888;
 
     private static int leftClicks;
     private static int rightClicks;
@@ -103,6 +103,18 @@ public final class HudModuleRenderer {
             graphics.text(client.font, Component.literal("L " + leftCps + "  R " + rightCps), 11, 28, TEXT);
         }
 
+        int infoY = HudModuleConfig.isCpsEnabled() ? 42 : HudModuleConfig.isFpsHudEnabled() ? 24 : 6;
+        if (HudModuleConfig.isCoordinatesEnabled()) {
+            var position = client.player.blockPosition();
+            String coordinates = "XYZ  " + position.getX() + "  " + position.getY() + "  " + position.getZ();
+            drawInfoLine(graphics, client, coordinates, infoY, width);
+            infoY += 19;
+        }
+        if (HudModuleConfig.isDirectionEnabled()) {
+            String facing = "FACING  " + client.player.getDirection().getName().toUpperCase(java.util.Locale.ROOT);
+            drawInfoLine(graphics, client, facing, infoY, width);
+        }
+
         if (HudModuleConfig.isPotionBarsEnabled()) {
             drawPotionBars(graphics, client, width, graphics.guiHeight());
         }
@@ -110,6 +122,18 @@ public final class HudModuleRenderer {
         if (HudModuleConfig.isArmorHudEnabled()) {
             drawArmorHud(graphics, client, width, graphics.guiHeight());
         }
+    }
+
+    private static void drawInfoLine(GuiGraphicsExtractor graphics, Minecraft client, String text, int y, int screenWidth) {
+        int panelWidth = Math.min(screenWidth - 12, Math.max(72, client.font.width(text) + 12));
+        if (panelWidth < 52) return;
+        String visible = text;
+        while (!visible.isEmpty() && client.font.width(visible) > panelWidth - 10) {
+            visible = visible.substring(0, visible.length() - 1);
+        }
+        if (!visible.equals(text) && visible.length() > 1) visible = visible.substring(0, visible.length() - 1) + "…";
+        drawPanel(graphics, 6, y, panelWidth, 16);
+        graphics.text(client.font, Component.literal(visible), 11, y + 4, TEXT);
     }
 
     private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight) {
