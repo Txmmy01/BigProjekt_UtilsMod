@@ -13,7 +13,7 @@ import java.util.List;
 
 public final class BlockGlowRenderer {
     private static final int MAX_HIGHLIGHTS = 160;
-    private static final List<BlockPos> HIGHLIGHTS = new ArrayList<>();
+    private static volatile List<BlockPos> highlights = List.of();
     private static int ticks;
 
     private BlockGlowRenderer() {
@@ -26,7 +26,7 @@ public final class BlockGlowRenderer {
 
     private static void tick(Minecraft client) {
         if (!BlockGlowConfig.isEnabled() || client.level == null || client.player == null) {
-            HIGHLIGHTS.clear();
+            highlights = List.of();
             ticks = 0;
             return;
         }
@@ -36,14 +36,14 @@ public final class BlockGlowRenderer {
     }
 
     private static void scan(Minecraft client) {
-        HIGHLIGHTS.clear();
+        List<BlockPos> found = new ArrayList<>();
         int distance = BlockGlowConfig.getRenderDistance();
         int distanceSquared = distance * distance;
         BlockPos origin = client.player.blockPosition();
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         String dimension = client.level.dimension().toString();
 
-        for (int x = -distance; x <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; x++) {
+        for (int x = -distance; x <= distance && found.size() < MAX_HIGHLIGHTS; x++) {
             for (int y = -distance; y <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; y++) {
                 for (int z = -distance; z <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; z++) {
                     if (x * x + y * y + z * z > distanceSquared) continue;
@@ -51,11 +51,12 @@ public final class BlockGlowRenderer {
                     if (!client.level.hasChunkAt(cursor)) continue;
                     String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(cursor).getBlock()).toString();
                     if (BlockGlowConfig.isBlockEnabled(dimension, blockId)) {
-                        HIGHLIGHTS.add(cursor.immutable());
+                        found.add(cursor.immutable());
                     }
                 }
             }
         }
+        highlights = List.copyOf(found);
     }
 
     private static void render() {
@@ -63,7 +64,7 @@ public final class BlockGlowRenderer {
         if (!BlockGlowConfig.isEnabled() || client.level == null) return;
         String dimension = client.level.dimension().toString();
         float intensity = BlockGlowConfig.getIntensity();
-        for (BlockPos position : HIGHLIGHTS) {
+        for (BlockPos position : highlights) {
             String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(position).getBlock()).toString();
             if (!BlockGlowConfig.isBlockEnabled(dimension, blockId)) continue;
             int color = BlockGlowConfig.getBlockColor(blockId);
