@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 import java.util.Locale;
-import java.util.Map;
 
 public final class UtilsModScreen extends Screen {
     private static final int BACKGROUND = 0xF20D1015;
@@ -75,8 +74,7 @@ public final class UtilsModScreen extends Screen {
             int index = 0;
             int columns = contentWidth >= 560 ? 3 : 2;
             int itemWidth = Math.max(68, (contentWidth - 36 - (columns - 1) * 8) / columns);
-            for (Map.Entry<String, Integer> entry : BlockGlowConfig.DEFAULT_BLOCKS.entrySet()) {
-                String blockId = entry.getKey();
+            for (String blockId : BlockGlowConfig.DEFAULT_BLOCKS.keySet()) {
                 String displayName = blockId.substring("minecraft:".length()).replace('_', ' ');
                 if (!activeSearch.isEmpty() && !displayName.contains(activeSearch) && !blockId.contains(activeSearch)) continue;
                 int column = index % columns;
