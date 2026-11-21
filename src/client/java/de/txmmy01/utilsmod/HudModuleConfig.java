@@ -44,6 +44,12 @@ public final class HudModuleConfig {
         set("fps_hud.enabled", enabled);
     }
 
+    public static boolean isCoordinatesEnabled() { return get("coordinates.enabled"); }
+    public static void setCoordinatesEnabled(boolean enabled) { set("coordinates.enabled", enabled); }
+
+    public static boolean isDirectionEnabled() { return get("direction.enabled"); }
+    public static void setDirectionEnabled(boolean enabled) { set("direction.enabled", enabled); }
+
     public static boolean isCpsEnabled() {
         return get("cps.enabled");
     }
@@ -62,22 +68,10 @@ public final class HudModuleConfig {
     }
 
     private static void load() {
-        if (!Files.exists(FILE)) return;
-        try (Reader reader = Files.newBufferedReader(FILE)) {
-            VALUES.load(reader);
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not load HUD module configuration", exception);
-        }
+        ConfigStorage.load(FILE, VALUES, "HUD module");
     }
 
     private static void save() {
-        try {
-            Files.createDirectories(FILE.getParent());
-            try (Writer writer = Files.newBufferedWriter(FILE)) {
-                VALUES.store(writer, null);
-            }
-        } catch (IOException exception) {
-            UtilsModClient.LOGGER.error("Could not save HUD module configuration", exception);
-        }
+        ConfigStorage.save(FILE, VALUES, "HUD module");
     }
 }
