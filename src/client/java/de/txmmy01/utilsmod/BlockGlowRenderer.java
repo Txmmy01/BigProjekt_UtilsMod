@@ -1,0 +1,75 @@
+package de.txmmy01.utilsmod;
+
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.DrawStyle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.gizmos.Gizmos;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class BlockGlowRenderer {
+    private static final int MAX_HIGHLIGHTS = 160;
+    private static final List<BlockPos> HIGHLIGHTS = new ArrayList<>();
+    private static int ticks;
+
+    private BlockGlowRenderer() {
+    }
+
+    public static void register() {
+        ClientTickEvents.END_CLIENT_TICK.register(BlockGlowRenderer::tick);
+        LevelRenderEvents.BEFORE_GIZMOS.register(context -> render());
+    }
+
+    private static void tick(Minecraft client) {
+        if (!BlockGlowConfig.isEnabled() || client.level == null || client.player == null) {
+            HIGHLIGHTS.clear();
+            ticks = 0;
+            return;
+        }
+        if (++ticks < 10) return;
+        ticks = 0;
+        scan(client);
+    }
+
+    private static void scan(Minecraft client) {
+        HIGHLIGHTS.clear();
+        int distance = BlockGlowConfig.getRenderDistance();
+        int distanceSquared = distance * distance;
+        BlockPos origin = client.player.blockPosition();
+        BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+        String dimension = client.level.dimension().toString();
+
+        for (int x = -distance; x <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; x++) {
+            for (int y = -distance; y <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; y++) {
+                for (int z = -distance; z <= distance && HIGHLIGHTS.size() < MAX_HIGHLIGHTS; z++) {
+                    if (x * x + y * y + z * z > distanceSquared) continue;
+                    cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
+                    if (!client.level.hasChunkAt(cursor)) continue;
+                    String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(cursor).getBlock()).toString();
+                    if (BlockGlowConfig.isBlockEnabled(dimension, blockId)) {
+                        HIGHLIGHTS.add(cursor.immutable());
+                    }
+                }
+            }
+        }
+    }
+
+    private static void render() {
+        Minecraft client = Minecraft.getInstance();
+        if (!BlockGlowConfig.isEnabled() || client.level == null) return;
+        String dimension = client.level.dimension().toString();
+        float intensity = BlockGlowConfig.getIntensity();
+        for (BlockPos position : HIGHLIGHTS) {
+            String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(position).getBlock()).toString();
+            if (!BlockGlowConfig.isBlockEnabled(dimension, blockId)) continue;
+            int color = BlockGlowConfig.getBlockColor(blockId);
+            int alpha = Math.min(255, Math.round(((color >>> 24) & 0xFF) * intensity));
+            int visibleColor = (color & 0x00FFFFFF) | (alpha << 24);
+            Gizmos.box(position, DrawStyle.stroke(visibleColor, 1.5f)).ignoreOcclusion();
+        }
+    }
+}
