@@ -133,7 +133,7 @@ public final class HudModuleRenderer {
             infoY += 19;
         }
         if (HudModuleConfig.isWorldTimeHudEnabled()) {
-            long dayTime = Math.floorMod(client.level.getLevelData().getDayTime(), 24000L);
+            long dayTime = Math.floorMod(client.level.getDefaultClockTime(), 24000L);
             int hours = (int) ((dayTime / 1000 + 6) % 24);
             int minutes = (int) (dayTime % 1000 * 60 / 1000);
             drawInfoLine(graphics, client, String.format(java.util.Locale.ROOT, "TIME  %02d:%02d", hours, minutes), infoY, width);
