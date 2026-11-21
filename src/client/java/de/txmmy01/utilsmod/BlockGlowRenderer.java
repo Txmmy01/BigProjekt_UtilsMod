@@ -3,7 +3,7 @@ package de.txmmy01.utilsmod;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.DrawStyle;
+import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gizmos.Gizmos;
@@ -69,7 +69,7 @@ public final class BlockGlowRenderer {
             int color = BlockGlowConfig.getBlockColor(blockId);
             int alpha = Math.min(255, Math.round(((color >>> 24) & 0xFF) * intensity));
             int visibleColor = (color & 0x00FFFFFF) | (alpha << 24);
-            Gizmos.box(position, DrawStyle.stroke(visibleColor, 1.5f)).ignoreOcclusion();
+            Gizmos.box(position, GizmoStyle.stroke(visibleColor, 1.5f)).ignoreOcclusion();
         }
     }
 }
