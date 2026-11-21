@@ -43,9 +43,20 @@ public final class BlockGlowRenderer {
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         String dimension = client.level.dimension().toString();
 
-        for (int x = -distance; x <= distance && found.size() < MAX_HIGHLIGHTS; x++) {
-            for (int y = -distance; y <= distance && found.size() < MAX_HIGHLIGHTS; y++) {
-                for (int z = -distance; z <= distance && found.size() < MAX_HIGHLIGHTS; z++) {
+        int[] offsets = new int[distance * 2 + 1];
+        int offsetIndex = 0;
+        offsets[offsetIndex++] = 0;
+        for (int offset = 1; offset <= distance; offset++) {
+            offsets[offsetIndex++] = -offset;
+            offsets[offsetIndex++] = offset;
+        }
+
+        for (int x : offsets) {
+            if (found.size() >= MAX_HIGHLIGHTS) break;
+            for (int y : offsets) {
+                if (found.size() >= MAX_HIGHLIGHTS) break;
+                for (int z : offsets) {
+                    if (found.size() >= MAX_HIGHLIGHTS) break;
                     if (x * x + y * y + z * z > distanceSquared) continue;
                     cursor.set(origin.getX() + x, origin.getY() + y, origin.getZ() + z);
                     if (!client.level.hasChunkAt(cursor)) continue;
