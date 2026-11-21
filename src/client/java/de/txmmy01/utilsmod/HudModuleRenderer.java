@@ -67,7 +67,7 @@ public final class HudModuleRenderer {
         }
         java.util.Set<String> activeEffects = new java.util.HashSet<>();
         for (MobEffectInstance effect : client.player.getActiveEffects()) {
-            if (!effect.showIcon() || effect.isInfiniteDuration()) continue;
+            if (!effect.showIcon() || (!effect.isInfiniteDuration() && effect.getDuration() <= 0)) continue;
             String key = potionKey(effect);
             activeEffects.add(key);
             potionMaxDurations.merge(key, effect.getDuration(), Math::max);
@@ -138,7 +138,7 @@ public final class HudModuleRenderer {
 
     private static void drawPotionBars(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth, int screenHeight, int infoOffset) {
         List<MobEffectInstance> effects = new ArrayList<>(client.player.getActiveEffects());
-        effects.removeIf(effect -> !effect.showIcon());
+        effects.removeIf(effect -> !effect.showIcon() || (!effect.isInfiniteDuration() && effect.getDuration() <= 0));
         effects.sort((first, second) -> Integer.compare(second.getDuration(), first.getDuration()));
 
         int x = 6;
@@ -162,7 +162,7 @@ public final class HudModuleRenderer {
                 name = name.substring(0, name.length() - 1);
             }
             if (!name.equals(effect.getEffect().value().getDisplayName().getString())) name += "…";
-            int barColor = effect.getEffect().value().isBeneficial() ? GREEN : RED;
+            int barColor = effect.getEffect().value().getColor();
 
             graphics.text(client.font, Component.literal(name), x + 5, rowY + 3, TEXT);
             graphics.text(client.font, Component.literal(time), x + panelWidth - client.font.width(time) - 5, rowY + 3, MUTED);
