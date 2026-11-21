@@ -90,8 +90,10 @@ public final class UtilsModScreen extends Screen {
                     BlockGlowConfig.toggleBlock(dimension, blockId);
                     rebuildWidgets();
                 }).bounds(x, y, itemWidth, 24).build());
-                addRenderableWidget(Button.builder(Component.literal("●"), button -> BlockGlowConfig.cycleBlockColor(blockId))
-                        .bounds(x + itemWidth - 23, y, 20, 24).build());
+                addRenderableWidget(Button.builder(Component.literal("●").withStyle(style -> style.withColor(color)), button -> {
+                    BlockGlowConfig.cycleBlockColor(blockId);
+                    rebuildWidgets();
+                }).bounds(x + itemWidth - 23, y, 20, 24).build());
                 index++;
             }
         }
@@ -171,6 +173,9 @@ public final class UtilsModScreen extends Screen {
         graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 172, animated(MUTED));
         graphics.text(font, Component.literal("BLOCKGLOW"), x + 32, 124, animated(TEXT));
         graphics.text(font, Component.translatable("screen.utilsmod.blockglow_description"), x + 32, 140, animated(MUTED));
+        if (minecraft.level != null) {
+            graphics.text(font, Component.literal("DIMENSION  " + minecraft.level.dimension()), x + contentWidth - 180, 84, animated(MUTED));
+        }
     }
 
     private void drawSettings(GuiGraphicsExtractor graphics, int x, int contentWidth) {
