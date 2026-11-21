@@ -15,7 +15,7 @@ public final class UtilsModScreen extends Screen {
     private static final int ACCENT = 0xFFFF8A32;
     private static final int TEXT = 0xFFF4F6FA;
     private static final int MUTED = 0xFF9BA6B5;
-    private static boolean animationsEnabled = true;
+    private int blockListScroll;
     private long pageOpenedAt;
     private Page page = Page.DASHBOARD;
     private EditBox searchBox;
@@ -111,19 +111,23 @@ public final class UtilsModScreen extends Screen {
             addRenderableWidget(searchBox);
             addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.apply"), button -> {
                 activeSearch = searchBox.getValue().trim().toLowerCase(Locale.ROOT);
+                blockListScroll = 0;
                 rebuildWidgets();
             }).bounds(contentX + contentWidth - 98, 228, 80, 24).build());
 
             int index = 0;
             int columns = contentWidth >= 560 ? 3 : 2;
+            int visibleRows = Math.max(1, (height - 316) / 29);
             int itemWidth = Math.max(68, (contentWidth - 36 - (columns - 1) * 8) / columns);
             for (String blockId : BlockGlowConfig.DEFAULT_BLOCKS.keySet()) {
                 String displayName = blockId.substring("minecraft:".length()).replace('_', ' ');
                 if (!activeSearch.isEmpty() && !displayName.contains(activeSearch) && !blockId.contains(activeSearch)) continue;
                 int column = index % columns;
                 int row = index / columns;
+                index++;
+                if (row < blockListScroll || row >= blockListScroll + visibleRows) continue;
                 int x = contentX + 18 + column * (itemWidth + 8);
-                int y = 264 + row * 29;
+                int y = 264 + (row - blockListScroll) * 29;
                 String dimension = minecraft.level == null ? "minecraft:overworld" : minecraft.level.dimension().toString();
                 boolean selected = BlockGlowConfig.isBlockEnabled(dimension, blockId);
                 int color = BlockGlowConfig.getBlockColor(blockId);
@@ -136,15 +140,14 @@ public final class UtilsModScreen extends Screen {
                     BlockGlowConfig.cycleBlockColor(blockId);
                     rebuildWidgets();
                 }).bounds(x + itemWidth - 23, y, 20, 24).build());
-                index++;
             }
         }
 
         if (page == Page.SETTINGS) {
             addRenderableWidget(Button.builder(
-                    Component.translatable(animationsEnabled ? "screen.utilsmod.animations_on" : "screen.utilsmod.animations_off"),
+                    Component.translatable(UiConfig.isAnimationsEnabled() ? "screen.utilsmod.animations_on" : "screen.utilsmod.animations_off"),
                     button -> {
-                        animationsEnabled = !animationsEnabled;
+                        UiConfig.setAnimationsEnabled(!UiConfig.isAnimationsEnabled());
                         pageOpenedAt = System.nanoTime();
                         rebuildWidgets();
                     }
@@ -159,6 +162,30 @@ public final class UtilsModScreen extends Screen {
     private void setPage(Page nextPage) {
         page = nextPage;
         rebuildWidgets();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (page != Page.MODULES || mouseY < 252 || verticalAmount == 0) {
+            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+        }
+        int sidebarWidth = Math.max(112, Math.min(148, width / 5));
+        int contentWidth = Math.max(180, width - (sidebarWidth + 14) - 18);
+        int columns = contentWidth >= 560 ? 3 : 2;
+        int visibleRows = Math.max(1, (height - 316) / 29);
+        int matchingBlocks = 0;
+        for (String blockId : BlockGlowConfig.DEFAULT_BLOCKS.keySet()) {
+            String displayName = blockId.substring("minecraft:".length()).replace('_', ' ');
+            if (activeSearch.isEmpty() || displayName.contains(activeSearch) || blockId.contains(activeSearch)) matchingBlocks++;
+        }
+        int totalRows = (matchingBlocks + columns - 1) / columns;
+        int maxScroll = Math.max(0, totalRows - visibleRows);
+        int nextScroll = Math.clamp(blockListScroll + (verticalAmount < 0 ? 1 : -1), 0, maxScroll);
+        if (nextScroll != blockListScroll) {
+            blockListScroll = nextScroll;
+            rebuildWidgets();
+        }
+        return true;
     }
 
     @Override
@@ -244,7 +271,7 @@ public final class UtilsModScreen extends Screen {
     }
 
     private int animated(int color) {
-        if (!animationsEnabled) return color;
+        if (!UiConfig.isAnimationsEnabled()) return color;
         float progress = Math.min(1.0f, (System.nanoTime() - pageOpenedAt) / 220_000_000.0f);
         int alpha = (int) (((color >>> 24) & 0xFF) * progress);
         return (color & 0x00FFFFFF) | (alpha << 24);
