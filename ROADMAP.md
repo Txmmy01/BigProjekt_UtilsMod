@@ -2,7 +2,7 @@
 
 ## v2.0.0 implementation
 
-- [x] Fullbright with independent toggle and gamma restoration
+- [x] Fullbright with independent toggle and lightmap override
 - [x] Clear Lava with independent toggle
 - [x] Clear Water with independent toggle
 - [x] Persistent settings for all three modules
