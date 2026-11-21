@@ -3,7 +3,7 @@
 A client-side Fabric utility mod for Minecraft 26.2.
 
 **Author:** Txmmy01  
-**Version:** 2.1.0  
+**Version:** 3.0.0  
 **Mod ID:** utilsmod
 
 ## v1.0.0
@@ -36,6 +36,14 @@ A client-side Fabric utility mod for Minecraft 26.2.
 - CPS Counter: left and right mouse clicks per second
 - Independent HUD toggles with persistent settings in `config/utilsmod-hud.properties`
 - HUD elements are only rendered while in-world and no screen is open
+
+## Added for v3.0.0
+
+- Coordinates HUD with an independent toggle
+- Direction HUD with an independent toggle
+- Simplified module navigation with compact two-column HUD controls
+- Potion bars appear only for active effects and use each effect's own color
+- GUI layout avoids custom scissor/scroll rendering paths
 
 ## Build
 
