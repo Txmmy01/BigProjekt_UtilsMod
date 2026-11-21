@@ -1,38 +1,33 @@
 # UtilsMod
 
-A modular Fabric client mod for Minecraft 26.2.
+A client-side Fabric utility mod for Minecraft 26.2.
 
 **Author:** Txmmy01  
 **Version:** 1.0.0  
 **Mod ID:** utilsmod
 
-## Overview
+## v1.0.0 scope
 
-UtilsMod is built around a clean, modern client-side experience. The first release is focused on BlockGlow: configurable block highlights that preserve the original block textures and can be seen through walls.
-
-## Planned for v1.0.0
-
-- BlockGlow module
-- Individual block selection
-- Per-block highlight colors
-- Configurable render distance and glow intensity
-- Dimension-aware settings
+- Custom dark interface with orange accents
+- Right Shift keybind
+- Interface does not pause the game
+- BlockGlow with per-block selection and colors
+- Configurable render distance and highlight intensity
+- Dimension-specific settings
 - Persistent client configuration
-- An animated, dark interface with orange accents
-- A configurable keybind that opens without pausing the game
 
-## Development
+## Build
 
-The project targets Minecraft 26.2, Fabric Loader, Fabric API and Java 25.
+The project targets Minecraft 26.2 and Java 25.
 
 Build with Gradle 9.8.2:
 
 ```bash
-gradle build
+gradle --no-daemon build
 ```
 
 The built mod JAR is written to `build/libs/`.
 
 ## Status
 
-The project foundation is being set up. BlockGlow and the user interface are the next implementation stages.
+The interface foundation is present. v1.0.0 is not complete until BlockGlow is implemented and the build is verified.
