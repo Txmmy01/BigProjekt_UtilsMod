@@ -26,7 +26,7 @@ public abstract class FogRendererMixin {
 
         fog.environmentalStart = 0.0f;
         fog.environmentalEnd = Float.MAX_VALUE;
-        fog.color.w(0.0f);
+        fog.color.set(fog.color.x(), fog.color.y(), fog.color.z(), 0.0f);
         fog.skyEnd = Float.MAX_VALUE;
         fog.cloudEnd = Float.MAX_VALUE;
     }
