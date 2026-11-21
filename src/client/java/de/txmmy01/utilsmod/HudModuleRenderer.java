@@ -44,6 +44,8 @@ public final class HudModuleRenderer {
         );
     }
 
+    private static final java.util.Map<String, Integer> potionMaxDurations = new java.util.HashMap<>();
+
     private static void tick(Minecraft client) {
         if (client.player == null || client.level == null || !HudModuleConfig.isCpsEnabled()) {
             leftClicks = 0;
@@ -51,16 +53,33 @@ public final class HudModuleRenderer {
             leftCps = 0;
             rightCps = 0;
             cpsWindowStart = System.nanoTime();
+        } else {
+            long now = System.nanoTime();
+            if (now - cpsWindowStart >= 1_000_000_000L) {
+                leftCps = leftClicks;
+                rightCps = rightClicks;
+                leftClicks = 0;
+                rightClicks = 0;
+                cpsWindowStart = now;
+            }
+        }
+
+        if (client.player == null || !HudModuleConfig.isPotionBarsEnabled()) {
+            potionMaxDurations.clear();
             return;
         }
-        long now = System.nanoTime();
-        if (now - cpsWindowStart >= 1_000_000_000L) {
-            leftCps = leftClicks;
-            rightCps = rightClicks;
-            leftClicks = 0;
-            rightClicks = 0;
-            cpsWindowStart = now;
+        java.util.Set<String> activeEffects = new java.util.HashSet<>();
+        for (MobEffectInstance effect : client.player.getActiveEffects()) {
+            if (!effect.showIcon() || effect.isInfiniteDuration()) continue;
+            String key = potionKey(effect);
+            activeEffects.add(key);
+            potionMaxDurations.merge(key, effect.getDuration(), Math::max);
         }
+        potionMaxDurations.keySet().retainAll(activeEffects);
+    }
+
+    private static String potionKey(MobEffectInstance effect) {
+        return effect.getEffect().value().getDisplayName().getString() + "#" + effect.getAmplifier();
     }
 
     public static void onMouseClick(int button, int action) {
