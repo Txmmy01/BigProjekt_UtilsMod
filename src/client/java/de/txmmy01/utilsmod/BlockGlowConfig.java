@@ -29,9 +29,9 @@ public final class BlockGlowConfig {
 
     private static final Path FILE = FabricLoader.getInstance().getConfigDir().resolve("utilsmod.properties");
     private static final Properties VALUES = new Properties();
-    private static boolean enabled;
-    private static int renderDistance = 16;
-    private static float intensity = 1.0f;
+    private static volatile boolean enabled;
+    private static volatile int renderDistance = 16;
+    private static volatile float intensity = 1.0f;
 
     static {
         load();
