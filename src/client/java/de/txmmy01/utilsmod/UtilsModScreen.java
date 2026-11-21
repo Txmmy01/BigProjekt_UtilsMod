@@ -55,12 +55,12 @@ public final class UtilsModScreen extends Screen {
             addRenderableWidget(Button.builder(Component.literal("‹ Modules"), button -> setPage(Page.MODULES))
                     .bounds(contentX + 18, 100, 92, 23).build());
             int left = contentX + 18;
-            int buttonWidth = Math.max(90, Math.min(190, contentWidth - 36));
+            int settingsButtonWidth = Math.max(90, Math.min(190, contentWidth - 36));
             int y = 136;
             if (selectedModule.equals("blockglow")) {
                 addRenderableWidget(Button.builder(moduleState("BlockGlow", BlockGlowConfig.isEnabled()), button -> {
                     BlockGlowConfig.setEnabled(!BlockGlowConfig.isEnabled()); rebuildWidgets();
-                }).bounds(left, y, buttonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, 24).build());
                 y += 30;
                 addRenderableWidget(Button.builder(Component.literal("Render distance: " + BlockGlowConfig.getRenderDistance()), button -> {
                     BlockGlowConfig.cycleRenderDistance(); rebuildWidgets();
