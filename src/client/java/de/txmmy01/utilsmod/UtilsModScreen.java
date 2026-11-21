@@ -62,14 +62,40 @@ public final class UtilsModScreen extends Screen {
                     }
             ).bounds(contentX + 272, 108, 112, 24).build());
 
-            searchBox = new EditBox(font, contentX + 18, 150, Math.max(80, contentWidth - 126), 24, Component.translatable("screen.utilsmod.search"));
+            int moduleGap = 6;
+            int moduleWidth = Math.max(54, (contentWidth - 36 - moduleGap * 2) / 3);
+            addRenderableWidget(Button.builder(
+                    moduleState("screen.utilsmod.fullbright", VisualModuleConfig.isFullbrightEnabled()),
+                    button -> {
+                        boolean enabled = !VisualModuleConfig.isFullbrightEnabled();
+                        VisualModuleConfig.setFullbrightEnabled(enabled, minecraft.options.gamma().get());
+                        FullbrightModule.update(minecraft);
+                        rebuildWidgets();
+                    }
+            ).bounds(contentX + 18, 140, moduleWidth, 24).build());
+            addRenderableWidget(Button.builder(
+                    moduleState("screen.utilsmod.clear_lava", VisualModuleConfig.isClearLavaEnabled()),
+                    button -> {
+                        VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled());
+                        rebuildWidgets();
+                    }
+            ).bounds(contentX + 18 + moduleWidth + moduleGap, 140, moduleWidth, 24).build());
+            addRenderableWidget(Button.builder(
+                    moduleState("screen.utilsmod.clear_water", VisualModuleConfig.isClearWaterEnabled()),
+                    button -> {
+                        VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled());
+                        rebuildWidgets();
+                    }
+            ).bounds(contentX + 18 + (moduleWidth + moduleGap) * 2, 140, moduleWidth, 24).build());
+
+            searchBox = new EditBox(font, contentX + 18, 174, Math.max(80, contentWidth - 126), 24, Component.translatable("screen.utilsmod.search"));
             searchBox.setHint(Component.translatable("screen.utilsmod.search_hint"));
             searchBox.setValue(activeSearch);
             addRenderableWidget(searchBox);
             addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.apply"), button -> {
                 activeSearch = searchBox.getValue().trim().toLowerCase(Locale.ROOT);
                 rebuildWidgets();
-            }).bounds(contentX + contentWidth - 98, 150, 80, 24).build());
+            }).bounds(contentX + contentWidth - 98, 174, 80, 24).build());
 
             int index = 0;
             int columns = contentWidth >= 560 ? 3 : 2;
@@ -80,7 +106,7 @@ public final class UtilsModScreen extends Screen {
                 int column = index % columns;
                 int row = index / columns;
                 int x = contentX + 18 + column * (itemWidth + 8);
-                int y = 192 + row * 29;
+                int y = 210 + row * 29;
                 String dimension = minecraft.level == null ? "minecraft:overworld" : minecraft.level.dimension().toString();
                 boolean selected = BlockGlowConfig.isBlockEnabled(dimension, blockId);
                 int color = BlockGlowConfig.getBlockColor(blockId);
@@ -107,6 +133,10 @@ public final class UtilsModScreen extends Screen {
                     }
             ).bounds(contentX + 28, 156, 190, 28).build());
         }
+    }
+
+    private Component moduleState(String key, boolean enabled) {
+        return Component.translatable(key).append(Component.literal(enabled ? "  ON" : "  OFF"));
     }
 
     private void setPage(Page nextPage) {
@@ -145,20 +175,24 @@ public final class UtilsModScreen extends Screen {
     }
 
     private void drawDashboard(GuiGraphicsExtractor graphics, int x, int contentWidth) {
-        String activeModules = BlockGlowConfig.isEnabled() ? "1" : "0";
+        int activeCount = (BlockGlowConfig.isEnabled() ? 1 : 0)
+                + (VisualModuleConfig.isFullbrightEnabled() ? 1 : 0)
+                + (VisualModuleConfig.isClearLavaEnabled() ? 1 : 0)
+                + (VisualModuleConfig.isClearWaterEnabled() ? 1 : 0);
+        String activeModules = Integer.toString(activeCount);
         if (contentWidth < 420) {
-            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "BlockGlow");
+            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "4 modules");
             drawCard(graphics, x + 18, 190, contentWidth - 36, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
-            drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "1.0.0", " ");
+            drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "2.0.0", " ");
             return;
         }
 
         int cardY = 112;
         int gap = 10;
         int cardWidth = (contentWidth - 36 - gap * 2) / 3;
-        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "BlockGlow");
+        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "4 modules");
         drawCard(graphics, x + 18 + cardWidth + gap, cardY, cardWidth, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
-        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "1.0.0", " ");
+        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "2.0.0", " ");
         graphics.text(font, Component.translatable("screen.utilsmod.welcome"), x + 20, 216, TEXT);
         graphics.text(font, Component.translatable("screen.utilsmod.welcome_description"), x + 20, 236, MUTED);
         graphics.text(font, Component.translatable("screen.utilsmod.next_step"), x + 20, 274, ACCENT);
@@ -166,8 +200,8 @@ public final class UtilsModScreen extends Screen {
     }
 
     private void drawModules(GuiGraphicsExtractor graphics, int x, int contentWidth) {
-        graphics.fill(x + 18, 100, x + contentWidth - 18, 184, animated(PANEL_LIGHT));
-        graphics.fill(x + 18, 100, x + 21, 184, animated(ACCENT));
+        graphics.fill(x + 18, 100, x + contentWidth - 18, 166, animated(PANEL_LIGHT));
+        graphics.fill(x + 18, 100, x + 21, 166, animated(ACCENT));
         graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 84, animated(MUTED));
         graphics.text(font, Component.literal("BLOCKGLOW"), x + 32, 124, animated(TEXT));
         graphics.text(font, Component.translatable("screen.utilsmod.blockglow_description"), x + 32, 140, animated(MUTED));
