@@ -63,13 +63,21 @@ public final class BlockGlowRenderer {
         BlockPos origin = client.player.blockPosition();
         BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
         String dimension = client.level.dimension().toString();
+        java.util.Set<String> enabledBlocks = new java.util.HashSet<>();
+        for (String id : BlockGlowConfig.DEFAULT_BLOCKS.keySet()) {
+            if (BlockGlowConfig.isBlockEnabled(dimension, id)) enabledBlocks.add(id);
+        }
+        if (enabledBlocks.isEmpty()) {
+            highlights = List.of();
+            return;
+        }
 
         for (Offset offset : offsetsFor(distance)) {
             if (found.size() >= MAX_HIGHLIGHTS) break;
             cursor.set(origin.getX() + offset.x(), origin.getY() + offset.y(), origin.getZ() + offset.z());
             if (!client.level.hasChunkAt(cursor)) continue;
             String blockId = BuiltInRegistries.BLOCK.getKey(client.level.getBlockState(cursor).getBlock()).toString();
-            if (!BlockGlowConfig.isBlockEnabled(dimension, blockId)) continue;
+            if (!enabledBlocks.contains(blockId)) continue;
             found.add(new Highlight(cursor.immutable(), blockId, dimension, BlockGlowConfig.getBlockColor(blockId)));
         }
         highlights = List.copyOf(found);
