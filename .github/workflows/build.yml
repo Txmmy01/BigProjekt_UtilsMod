@@ -1,9 +1,10 @@
-name: Build
+name: Build v3 Release
 
 on:
   push:
     branches:
       - main
+      - v3.0.0-dev
   pull_request:
     branches:
       - main
@@ -14,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    name: Build UtilsMod
+    name: Build UtilsMod v3 Release
     runs-on: ubuntu-24.04
     steps:
       - name: Check out repository
@@ -28,11 +29,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v5
         with:
           gradle-version: '9.8.2'
-      - name: Build mod
+      - name: Build v3 release candidate
         run: gradle --no-daemon build
-      - name: Upload mod JAR
+      - name: Upload v3 release candidate JAR
         uses: actions/upload-artifact@v7
         with:
-          name: UtilsMod-${{ github.sha }}
+          name: UtilsMod-v3-release-${{ github.sha }}
           path: build/libs/*.jar
           if-no-files-found: error
