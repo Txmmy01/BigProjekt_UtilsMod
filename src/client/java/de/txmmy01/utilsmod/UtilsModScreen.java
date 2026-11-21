@@ -9,12 +9,12 @@ import net.minecraft.network.chat.Component;
 import java.util.Locale;
 
 public final class UtilsModScreen extends Screen {
-    private static final int BACKGROUND = 0xF20D1015;
-    private static final int PANEL = 0xFF171C24;
-    private static final int PANEL_LIGHT = 0xFF202733;
-    private static final int ACCENT = 0xFFFF8A32;
+    private static final int BACKGROUND = 0xF2080808;
+    private static final int PANEL = 0xFF151515;
+    private static final int PANEL_LIGHT = 0xFF222222;
+    private static final int ACCENT = 0xFFFFFFFF;
     private static final int TEXT = 0xFFF4F6FA;
-    private static final int MUTED = 0xFF9BA6B5;
+    private static final int MUTED = 0xFFAAAAAA;
     private int blockListScroll;
     private long pageOpenedAt;
     private Page page = Page.DASHBOARD;
@@ -94,8 +94,16 @@ public final class UtilsModScreen extends Screen {
                     HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()); rebuildWidgets();
                 }).bounds(left, y, buttonWidth, 24).build());
                 y += 30;
-                addRenderableWidget(Button.builder(moduleState("CPS", HudModuleConfig.isCpsEnabled()), button -> {
+                addRenderableWidget(Button.builder(moduleState("CPS counter", HudModuleConfig.isCpsEnabled()), button -> {
                     HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("Coordinates", HudModuleConfig.isCoordinatesEnabled()), button -> {
+                    HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()); rebuildWidgets();
+                }).bounds(left, y, buttonWidth, 24).build());
+                y += 30;
+                addRenderableWidget(Button.builder(moduleState("Direction", HudModuleConfig.isDirectionEnabled()), button -> {
+                    HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()); rebuildWidgets();
                 }).bounds(left, y, buttonWidth, 24).build());
             }
         }
@@ -157,8 +165,8 @@ public final class UtilsModScreen extends Screen {
         graphics.fill(sidebarWidth - 2, 0, sidebarWidth, height, animated(ACCENT));
         graphics.fill(contentX, 48, contentX + contentWidth, panelBottom, animated(PANEL));
         graphics.fill(contentX, 48, contentX + contentWidth, 51, animated(ACCENT));
-        graphics.text(font, Component.literal("UTILS"), 18, 24, animated(TEXT));
-        graphics.text(font, Component.literal("MOD"), 58, 24, animated(ACCENT));
+        graphics.text(font, Component.literal("UTILS MOD"), 18, 24, animated(TEXT));
+        graphics.fill(18, 56, sidebarWidth - 18, 57, 0xFF555555);
         graphics.text(font, Component.translatable("screen.utilsmod.version"), 18, 43, animated(MUTED));
         graphics.text(font, Component.translatable("screen.utilsmod.workspace"), contentX + 18, 18, animated(MUTED));
         graphics.text(font, page.title(), contentX + 18, 66, animated(TEXT));
@@ -184,10 +192,12 @@ public final class UtilsModScreen extends Screen {
                 + (HudModuleConfig.isArmorHudEnabled() ? 1 : 0)
                 + (HudModuleConfig.isPotionBarsEnabled() ? 1 : 0)
                 + (HudModuleConfig.isFpsHudEnabled() ? 1 : 0)
-                + (HudModuleConfig.isCpsEnabled() ? 1 : 0);
+                + (HudModuleConfig.isCpsEnabled() ? 1 : 0)
+                + (HudModuleConfig.isCoordinatesEnabled() ? 1 : 0)
+                + (HudModuleConfig.isDirectionEnabled() ? 1 : 0);
         String activeModules = Integer.toString(activeCount);
         if (contentWidth < 420) {
-            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "8 modules");
+            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "10 utilities");
             drawCard(graphics, x + 18, 190, contentWidth - 36, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
             drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "2.1.0", " ");
             return;
@@ -219,7 +229,7 @@ public final class UtilsModScreen extends Screen {
         String name = switch (selectedModule) {
             case "blockglow" -> "BlockGlow";
             case "visual" -> "Visual";
-            case "hud" -> "HUD";
+            case "hud" -> "HUD & utilities";
             default -> "Module";
         };
         graphics.text(font, Component.literal("/modules/" + selectedModule + "/(setting)"), x + 32, 82, animated(MUTED));
