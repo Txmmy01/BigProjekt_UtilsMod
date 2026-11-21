@@ -26,7 +26,6 @@ public final class UtilsModClient implements ClientModInitializer {
                 category
         ));
         ClientTickEvents.END_CLIENT_TICK.register(UtilsModClient::handleKeyInput);
-        ClientTickEvents.END_CLIENT_TICK.register(FullbrightModule::update);
         BlockGlowRenderer.register();
         LOGGER.info("UtilsMod {} initialized", "2.0.0");
     }
