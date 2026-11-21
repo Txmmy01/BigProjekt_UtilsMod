@@ -3,7 +3,7 @@
   "id": "utilsmod",
   "version": "${version}",
   "name": "UtilsMod",
-  "description": "A modular client-side utility mod with configurable block highlights.",
+  "description": "A modular client-side utility mod with configurable visual modules and block highlights.",
   "authors": [
     "Txmmy01"
   ],
@@ -16,6 +16,9 @@
       "de.txmmy01.utilsmod.UtilsModClient"
     ]
   },
+  "mixins": [
+    "utilsmod.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.20.1",
     "minecraft": "~26.2",

@@ -1,6 +1,5 @@
 package de.txmmy01.utilsmod;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import org.lwjgl.glfw.GLFW;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -28,7 +27,7 @@ public final class UtilsModClient implements ClientModInitializer {
         ));
         ClientTickEvents.END_CLIENT_TICK.register(UtilsModClient::handleKeyInput);
         BlockGlowRenderer.register();
-        LOGGER.info("UtilsMod {} initialized", "1.0.0");
+        LOGGER.info("UtilsMod {} initialized", "2.0.0");
     }
 
     private static void handleKeyInput(Minecraft client) {
