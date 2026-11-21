@@ -13,6 +13,7 @@ public final class UtilsModScreen extends Screen {
     private static final int TEXT = 0xFFF4F6FA;
     private static final int MUTED = 0xFF9BA6B5;
     private static boolean animationsEnabled = true;
+    private long pageOpenedAt;
     private Page page = Page.DASHBOARD;
 
     public UtilsModScreen() {
@@ -21,6 +22,7 @@ public final class UtilsModScreen extends Screen {
 
     @Override
     protected void init() {
+        pageOpenedAt = System.nanoTime();
         int sidebarWidth = Math.max(112, Math.min(148, width / 5));
         int buttonX = 18;
         int buttonWidth = sidebarWidth - 30;
@@ -37,6 +39,7 @@ public final class UtilsModScreen extends Screen {
                     Component.translatable(animationsEnabled ? "screen.utilsmod.animations_on" : "screen.utilsmod.animations_off"),
                     button -> {
                         animationsEnabled = !animationsEnabled;
+                        pageOpenedAt = System.nanoTime();
                         rebuildWidgets();
                     }
             ).bounds(sidebarWidth + 28, 156, 190, 28).build());
@@ -57,14 +60,14 @@ public final class UtilsModScreen extends Screen {
 
         graphics.fill(0, 0, width, height, BACKGROUND);
         graphics.fill(0, 0, sidebarWidth, height, 0xFF11161D);
-        graphics.fill(sidebarWidth - 2, 0, sidebarWidth, height, ACCENT);
-        graphics.fill(contentX, 48, contentX + contentWidth, panelBottom, PANEL);
-        graphics.fill(contentX, 48, contentX + contentWidth, 51, ACCENT);
-        graphics.text(font, Component.literal("UTILS"), 18, 24, TEXT);
-        graphics.text(font, Component.literal("MOD"), 58, 24, ACCENT);
-        graphics.text(font, Component.translatable("screen.utilsmod.version"), 18, 43, MUTED);
-        graphics.text(font, Component.translatable("screen.utilsmod.workspace"), contentX + 18, 18, MUTED);
-        graphics.text(font, page.title(), contentX + 18, 66, TEXT);
+        graphics.fill(sidebarWidth - 2, 0, sidebarWidth, height, animated(ACCENT));
+        graphics.fill(contentX, 48, contentX + contentWidth, panelBottom, animated(PANEL));
+        graphics.fill(contentX, 48, contentX + contentWidth, 51, animated(ACCENT));
+        graphics.text(font, Component.literal("UTILS"), 18, 24, animated(TEXT));
+        graphics.text(font, Component.literal("MOD"), 58, 24, animated(ACCENT));
+        graphics.text(font, Component.translatable("screen.utilsmod.version"), 18, 43, animated(MUTED));
+        graphics.text(font, Component.translatable("screen.utilsmod.workspace"), contentX + 18, 18, animated(MUTED));
+        graphics.text(font, page.title(), contentX + 18, 66, animated(TEXT));
 
         switch (page) {
             case DASHBOARD -> drawDashboard(graphics, contentX, contentWidth);
@@ -99,24 +102,31 @@ public final class UtilsModScreen extends Screen {
     }
 
     private void drawModules(GuiGraphicsExtractor graphics, int x, int contentWidth) {
-        graphics.fill(x + 18, 108, x + contentWidth - 18, 180, PANEL_LIGHT);
-        graphics.fill(x + 18, 108, x + 21, 180, ACCENT);
-        graphics.text(font, Component.translatable("screen.utilsmod.module_library"), x + 32, 124, TEXT);
-        graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 146, MUTED);
+        graphics.fill(x + 18, 108, x + contentWidth - 18, 180, animated(PANEL_LIGHT));
+        graphics.fill(x + 18, 108, x + 21, 180, animated(ACCENT));
+        graphics.text(font, Component.translatable("screen.utilsmod.module_library"), x + 32, 124, animated(TEXT));
+        graphics.text(font, Component.translatable("screen.utilsmod.module_library_description"), x + 32, 146, animated(MUTED));
     }
 
     private void drawSettings(GuiGraphicsExtractor graphics, int x, int contentWidth) {
-        graphics.fill(x + 18, 108, x + contentWidth - 18, 210, PANEL_LIGHT);
-        graphics.text(font, Component.translatable("screen.utilsmod.interface_settings"), x + 32, 124, TEXT);
-        graphics.text(font, Component.translatable("screen.utilsmod.animations_description"), x + 32, 140, MUTED);
+        graphics.fill(x + 18, 108, x + contentWidth - 18, 210, animated(PANEL_LIGHT));
+        graphics.text(font, Component.translatable("screen.utilsmod.interface_settings"), x + 32, 124, animated(TEXT));
+        graphics.text(font, Component.translatable("screen.utilsmod.animations_description"), x + 32, 140, animated(MUTED));
     }
 
     private void drawCard(GuiGraphicsExtractor graphics, int x, int y, int cardWidth, Component label, String value, String detail) {
-        graphics.fill(x, y, x + cardWidth, y + 76, PANEL_LIGHT);
-        graphics.fill(x, y, x + cardWidth, y + 2, ACCENT);
-        graphics.text(font, label, x + 10, y + 12, MUTED);
-        graphics.text(font, Component.literal(value), x + 10, y + 32, TEXT);
-        if (!detail.isBlank()) graphics.text(font, Component.literal(detail), x + 10, y + 52, MUTED);
+        graphics.fill(x, y, x + cardWidth, y + 76, animated(PANEL_LIGHT));
+        graphics.fill(x, y, x + cardWidth, y + 2, animated(ACCENT));
+        graphics.text(font, label, x + 10, y + 12, animated(MUTED));
+        graphics.text(font, Component.literal(value), x + 10, y + 32, animated(TEXT));
+        if (!detail.isBlank()) graphics.text(font, Component.literal(detail), x + 10, y + 52, animated(MUTED));
+    }
+
+    private int animated(int color) {
+        if (!animationsEnabled) return color;
+        float progress = Math.min(1.0f, (System.nanoTime() - pageOpenedAt) / 220_000_000.0f);
+        int alpha = (int) (((color >>> 24) & 0xFF) * progress);
+        return (color & 0x00FFFFFF) | (alpha << 24);
     }
 
     @Override
