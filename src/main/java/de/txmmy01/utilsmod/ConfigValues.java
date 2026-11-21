@@ -4,6 +4,11 @@ final class ConfigValues {
     private ConfigValues() {
     }
 
+    static String dimensionKey(String value) {
+        return java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(value.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    }
+
     static int parseDistance(String value, int fallback) {
         try {
             return Math.clamp(Integer.parseInt(value), 8, 32);

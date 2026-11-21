@@ -30,6 +30,6 @@ class ConfigValuesTest {
 
     @Test
     void base64DimensionKeysDoNotCollideOnSeparators() {
-        assertNotEquals(BlockGlowConfig.dimensionKey("example:a.b"), BlockGlowConfig.dimensionKey("example.a:b"));
+        assertNotEquals(ConfigValues.dimensionKey("example:a.b"), BlockGlowConfig.dimensionKey("example.a:b"));
     }
 }

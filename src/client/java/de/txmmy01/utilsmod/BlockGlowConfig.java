@@ -107,8 +107,7 @@ public final class BlockGlowConfig {
     }
 
     public static String dimensionKey(String dimension) {
-        return java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(dimension.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        return ConfigValues.dimensionKey(dimension);
     }
 
     private static String key(String dimension, String blockId, String setting) {
