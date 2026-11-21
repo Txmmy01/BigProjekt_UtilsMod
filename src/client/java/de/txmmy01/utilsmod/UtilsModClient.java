@@ -27,7 +27,8 @@ public final class UtilsModClient implements ClientModInitializer {
         ));
         ClientTickEvents.END_CLIENT_TICK.register(UtilsModClient::handleKeyInput);
         BlockGlowRenderer.register();
-        LOGGER.info("UtilsMod {} initialized", "2.0.0");
+        HudModuleRenderer.register();
+        LOGGER.info("UtilsMod {} initialized", "2.1.0");
     }
 
     private static void handleKeyInput(Minecraft client) {

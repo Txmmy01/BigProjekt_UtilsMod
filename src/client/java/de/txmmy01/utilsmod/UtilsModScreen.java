@@ -87,14 +87,32 @@ public final class UtilsModScreen extends Screen {
                     }
             ).bounds(contentX + 18 + (moduleWidth + moduleGap) * 2, 140, moduleWidth, 24).build());
 
-            searchBox = new EditBox(font, contentX + 18, 174, Math.max(80, contentWidth - 126), 24, Component.translatable("screen.utilsmod.search"));
+            int hudButtonWidth = Math.max(72, (contentWidth - 44) / 2);
+            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.armor_hud", HudModuleConfig.isArmorHudEnabled()), button -> {
+                HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled());
+                rebuildWidgets();
+            }).bounds(contentX + 18, 170, hudButtonWidth, 23).build());
+            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.potion_bars", HudModuleConfig.isPotionBarsEnabled()), button -> {
+                HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled());
+                rebuildWidgets();
+            }).bounds(contentX + 26 + hudButtonWidth, 170, hudButtonWidth, 23).build());
+            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.fps_hud", HudModuleConfig.isFpsHudEnabled()), button -> {
+                HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled());
+                rebuildWidgets();
+            }).bounds(contentX + 18, 197, hudButtonWidth, 23).build());
+            addRenderableWidget(Button.builder(moduleState("screen.utilsmod.cps", HudModuleConfig.isCpsEnabled()), button -> {
+                HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled());
+                rebuildWidgets();
+            }).bounds(contentX + 26 + hudButtonWidth, 197, hudButtonWidth, 23).build());
+
+            searchBox = new EditBox(font, contentX + 18, 228, Math.max(80, contentWidth - 126), 24, Component.translatable("screen.utilsmod.search"));
             searchBox.setHint(Component.translatable("screen.utilsmod.search_hint"));
             searchBox.setValue(activeSearch);
             addRenderableWidget(searchBox);
             addRenderableWidget(Button.builder(Component.translatable("screen.utilsmod.apply"), button -> {
                 activeSearch = searchBox.getValue().trim().toLowerCase(Locale.ROOT);
                 rebuildWidgets();
-            }).bounds(contentX + contentWidth - 98, 174, 80, 24).build());
+            }).bounds(contentX + contentWidth - 98, 228, 80, 24).build());
 
             int index = 0;
             int columns = contentWidth >= 560 ? 3 : 2;
@@ -105,7 +123,7 @@ public final class UtilsModScreen extends Screen {
                 int column = index % columns;
                 int row = index / columns;
                 int x = contentX + 18 + column * (itemWidth + 8);
-                int y = 210 + row * 29;
+                int y = 264 + row * 29;
                 String dimension = minecraft.level == null ? "minecraft:overworld" : minecraft.level.dimension().toString();
                 boolean selected = BlockGlowConfig.isBlockEnabled(dimension, blockId);
                 int color = BlockGlowConfig.getBlockColor(blockId);
@@ -177,21 +195,25 @@ public final class UtilsModScreen extends Screen {
         int activeCount = (BlockGlowConfig.isEnabled() ? 1 : 0)
                 + (VisualModuleConfig.isFullbrightEnabled() ? 1 : 0)
                 + (VisualModuleConfig.isClearLavaEnabled() ? 1 : 0)
-                + (VisualModuleConfig.isClearWaterEnabled() ? 1 : 0);
+                + (VisualModuleConfig.isClearWaterEnabled() ? 1 : 0)
+                + (HudModuleConfig.isArmorHudEnabled() ? 1 : 0)
+                + (HudModuleConfig.isPotionBarsEnabled() ? 1 : 0)
+                + (HudModuleConfig.isFpsHudEnabled() ? 1 : 0)
+                + (HudModuleConfig.isCpsEnabled() ? 1 : 0);
         String activeModules = Integer.toString(activeCount);
         if (contentWidth < 420) {
-            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "4 modules");
+            drawCard(graphics, x + 18, 108, contentWidth - 36, Component.translatable("screen.utilsmod.active_modules"), activeModules, "8 modules");
             drawCard(graphics, x + 18, 190, contentWidth - 36, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
-            drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "2.0.0", " ");
+            drawCard(graphics, x + 18, 272, contentWidth - 36, Component.translatable("screen.utilsmod.release"), "2.1.0", " ");
             return;
         }
 
         int cardY = 112;
         int gap = 10;
         int cardWidth = (contentWidth - 36 - gap * 2) / 3;
-        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "4 modules");
+        drawCard(graphics, x + 18, cardY, cardWidth, Component.translatable("screen.utilsmod.active_modules"), activeModules, "8 modules");
         drawCard(graphics, x + 18 + cardWidth + gap, cardY, cardWidth, Component.translatable("screen.utilsmod.game_version"), "26.2", "Fabric");
-        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "2.0.0", " ");
+        drawCard(graphics, x + 18 + (cardWidth + gap) * 2, cardY, cardWidth, Component.translatable("screen.utilsmod.release"), "2.1.0", " ");
         graphics.text(font, Component.translatable("screen.utilsmod.welcome"), x + 20, 216, TEXT);
         graphics.text(font, Component.translatable("screen.utilsmod.welcome_description"), x + 20, 236, MUTED);
         graphics.text(font, Component.translatable("screen.utilsmod.next_step"), x + 20, 274, ACCENT);

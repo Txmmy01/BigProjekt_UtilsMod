@@ -3,7 +3,7 @@
   "id": "utilsmod",
   "version": "${version}",
   "name": "UtilsMod",
-  "description": "A modular client-side utility mod with configurable visual modules and block highlights.",
+  "description": "A modular client-side utility mod with configurable visual modules, PvP HUDs and block highlights.",
   "authors": [
     "Txmmy01"
   ],

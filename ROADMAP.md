@@ -8,11 +8,20 @@
 - [x] Persistent settings for all three modules
 - [x] GUI controls and dashboard module count
 
+## v2.1.0 implementation
+
+- [x] Compact Armor HUD with four durability bars
+- [x] Compact Potion Bars with effect name, remaining time and duration bar
+- [x] FPS HUD
+- [x] Left and right CPS counter
+- [x] Independent toggles and persistent HUD configuration
+- [ ] In-game layout and multiplayer smoke test
+
 ## Later candidates
 
-- HUD Utils
-- Chat Utils
-- Performance
-- SoundMuter
-
-The v2.0.0 implementation is being developed on `v2.0.0-development`. It is kept separate from the stable v1.0.0 `main` branch until the build and in-game checks are complete.
+- Keystrokes
+- Ping HUD
+- Coordinates HUD
+- Item Counter
+- Toggle Sprint
+- FPS graph and performance monitor
