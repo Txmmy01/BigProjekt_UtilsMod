@@ -5,12 +5,14 @@ import net.minecraft.client.renderer.LightmapRenderStateExtractor;
 import net.minecraft.client.renderer.state.LightmapRenderState;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LightmapRenderStateExtractor.class)
 public abstract class FullbrightMixin {
+    @Unique
     private static final Vector3f WHITE = new Vector3f(1.0f, 1.0f, 1.0f);
     @Inject(method = "extract", at = @At("RETURN"))
     private void utilsmod$applyFullbright(LightmapRenderState state, float partialTicks, CallbackInfo callback) {
