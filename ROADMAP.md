@@ -27,3 +27,11 @@
 - Keystrokes and Ping HUD
 - Item counter and Toggle Sprint
 - FPS history and performance monitor
+
+
+## v3.0.1
+
+- [x] Ancient Debris and Nether ore highlights.
+- [x] Item-icon Armor HUD.
+- [x] Ping, Biome, Speed, World Time and Hunger HUD modules.
+- [ ] Validate all additions in Minecraft 26.2 in-game.

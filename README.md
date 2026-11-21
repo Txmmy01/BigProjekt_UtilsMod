@@ -60,3 +60,10 @@ The mod JAR is written to `build/libs/`. GitHub Actions builds pushes to `main` 
 ## Validation
 
 A successful build confirms compilation and packaging only. An in-game visual test is required to validate rendering behavior in a Minecraft 26.2 client.
+
+
+## v3.0.1
+
+- BlockGlow supports Ancient Debris, Nether Gold Ore and Nether Quartz Ore.
+- Armor HUD renders the actual equipped armor item icons instead of letter abbreviations.
+- Five independent HUD modules: Ping, Biome, Speed, World Time and Hunger.

@@ -41,3 +41,8 @@ Der PR verbessert die BlockGlow-Suche, CPS-Eingabeerfassung, HUD-Anzeigen, GUI-S
 ## Teststatus
 
 Der Build prüft Kompilierung und Paketierung. Er ersetzt keinen Test im laufenden Minecraft-Client. Vor einem Release müssen insbesondere GUI-Größen, Rendering, Dimensionen, Mixin-Kompatibilität und das Verhalten mit anderen Client-Mods praktisch geprüft werden.
+
+
+## v3.0.1
+
+Added BlockGlow entries for Ancient Debris, Nether Gold Ore and Nether Quartz Ore. The Armor HUD now renders equipped item icons. Five independently configurable HUD modules were added: Ping, Biome, Speed, World Time and Hunger. In-game validation remains required.
