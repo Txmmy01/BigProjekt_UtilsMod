@@ -56,55 +56,57 @@ public final class UtilsModScreen extends Screen {
                     .bounds(contentX + 18, 100, 92, 23).build());
             int left = contentX + 18;
             int settingsButtonWidth = Math.max(90, Math.min(190, contentWidth - 36));
-            int y = 136;
+            int settingButtonHeight = height < 320 ? 18 : 24;
+            int settingStep = height < 320 ? 20 : 30;
+            int y = height < 320 ? 112 : 136;
             if (selectedModule.equals("blockglow")) {
                 addRenderableWidget(Button.builder(moduleState("BlockGlow", BlockGlowConfig.isEnabled()), button -> {
                     BlockGlowConfig.setEnabled(!BlockGlowConfig.isEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(Component.literal("Render distance: " + BlockGlowConfig.getRenderDistance()), button -> {
                     BlockGlowConfig.cycleRenderDistance(); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(Component.literal("Intensity: " + BlockGlowConfig.getIntensity()), button -> {
                     BlockGlowConfig.cycleIntensity(); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
             } else if (selectedModule.equals("visual")) {
                 addRenderableWidget(Button.builder(moduleState("Fullbright", VisualModuleConfig.isFullbrightEnabled()), button -> {
                     VisualModuleConfig.setFullbrightEnabled(!VisualModuleConfig.isFullbrightEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("Clear lava", VisualModuleConfig.isClearLavaEnabled()), button -> {
                     VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("Clear water", VisualModuleConfig.isClearWaterEnabled()), button -> {
                     VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
             } else if (selectedModule.equals("hud")) {
                 addRenderableWidget(Button.builder(moduleState("Armor HUD", HudModuleConfig.isArmorHudEnabled()), button -> {
                     HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("Potion bars", HudModuleConfig.isPotionBarsEnabled()), button -> {
                     HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("FPS HUD", HudModuleConfig.isFpsHudEnabled()), button -> {
                     HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("CPS counter", HudModuleConfig.isCpsEnabled()), button -> {
                     HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("Coordinates", HudModuleConfig.isCoordinatesEnabled()), button -> {
                     HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
-                y += 30;
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
+                y += settingStep;
                 addRenderableWidget(Button.builder(moduleState("Direction", HudModuleConfig.isDirectionEnabled()), button -> {
                     HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()); rebuildWidgets();
-                }).bounds(left, y, settingsButtonWidth, 24).build());
+                }).bounds(left, y, settingsButtonWidth, settingButtonHeight).build());
             }
         }
 
