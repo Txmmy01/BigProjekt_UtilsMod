@@ -73,13 +73,14 @@ public final class UtilsModScreen extends Screen {
             }).bounds(contentX + contentWidth - 98, 150, 80, 24).build());
 
             int index = 0;
-            int itemWidth = Math.max(68, (contentWidth - 48) / 2);
+            int columns = contentWidth >= 560 ? 3 : 2;
+            int itemWidth = Math.max(68, (contentWidth - 36 - (columns - 1) * 8) / columns);
             for (Map.Entry<String, Integer> entry : BlockGlowConfig.DEFAULT_BLOCKS.entrySet()) {
                 String blockId = entry.getKey();
                 String displayName = blockId.substring("minecraft:".length()).replace('_', ' ');
                 if (!activeSearch.isEmpty() && !displayName.contains(activeSearch) && !blockId.contains(activeSearch)) continue;
-                int column = index % 2;
-                int row = index / 2;
+                int column = index % columns;
+                int row = index / columns;
                 int x = contentX + 18 + column * (itemWidth + 8);
                 int y = 192 + row * 29;
                 String dimension = minecraft.level == null ? "minecraft:overworld" : minecraft.level.dimension().toString();
