@@ -64,12 +64,16 @@ public final class UtilsModScreen extends Screen {
                     y = addToggle("Clear lava", VisualModuleConfig.isClearLavaEnabled(), left, y, buttonWidth, buttonHeight, () -> VisualModuleConfig.setClearLavaEnabled(!VisualModuleConfig.isClearLavaEnabled()));
                     addToggle("Clear water", VisualModuleConfig.isClearWaterEnabled(), left, y, buttonWidth, buttonHeight, () -> VisualModuleConfig.setClearWaterEnabled(!VisualModuleConfig.isClearWaterEnabled()));
                 } else {
-                    y = addToggle("Armor HUD", HudModuleConfig.isArmorHudEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled()));
-                    y = addToggle("Potion bars", HudModuleConfig.isPotionBarsEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled()));
-                    y = addToggle("FPS HUD", HudModuleConfig.isFpsHudEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()));
-                    y = addToggle("CPS counter", HudModuleConfig.isCpsEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()));
-                    y = addToggle("Coordinates", HudModuleConfig.isCoordinatesEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()));
-                    addToggle("Direction", HudModuleConfig.isDirectionEnabled(), left, y, buttonWidth, buttonHeight, () -> HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()));
+                    int gap = 6;
+                    int columnWidth = Math.max(1, (buttonWidth - gap) / 2);
+                    addButton("Armor HUD  " + (HudModuleConfig.isArmorHudEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setArmorHudEnabled(!HudModuleConfig.isArmorHudEnabled()));
+                    addButton("Potion bars  " + (HudModuleConfig.isPotionBarsEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setPotionBarsEnabled(!HudModuleConfig.isPotionBarsEnabled()));
+                    y += buttonStep;
+                    addButton("FPS HUD  " + (HudModuleConfig.isFpsHudEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setFpsHudEnabled(!HudModuleConfig.isFpsHudEnabled()));
+                    addButton("CPS  " + (HudModuleConfig.isCpsEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setCpsEnabled(!HudModuleConfig.isCpsEnabled()));
+                    y += buttonStep;
+                    addButton("Coordinates  " + (HudModuleConfig.isCoordinatesEnabled() ? "ON" : "OFF"), left, y, columnWidth, buttonHeight, () -> HudModuleConfig.setCoordinatesEnabled(!HudModuleConfig.isCoordinatesEnabled()));
+                    addButton("Direction  " + (HudModuleConfig.isDirectionEnabled() ? "ON" : "OFF"), left + columnWidth + gap, y, columnWidth, buttonHeight, () -> HudModuleConfig.setDirectionEnabled(!HudModuleConfig.isDirectionEnabled()));
                 }
             }
             case SETTINGS -> addToggle("GUI animations", UiConfig.isAnimationsEnabled(), left, top, buttonWidth, buttonHeight, () -> UiConfig.setAnimationsEnabled(!UiConfig.isAnimationsEnabled()));
@@ -83,7 +87,7 @@ public final class UtilsModScreen extends Screen {
         return switch (page) {
             case DASHBOARD -> 2;
             case MODULES -> 3;
-            case MODULE_SETTINGS -> selectedModule.equals("hud") ? 6 : 3;
+            case MODULE_SETTINGS -> selectedModule.equals("hud") ? 3 : 3;
             case SETTINGS -> 1;
         };
     }
