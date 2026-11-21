@@ -14,7 +14,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public final class HudModuleRenderer {
     private static final int PANEL = 0xB810141B;
@@ -25,8 +24,6 @@ public final class HudModuleRenderer {
     private static final int YELLOW = 0xFFFFC44D;
     private static final int RED = 0xFFFF647C;
 
-    private static boolean leftWasDown;
-    private static boolean rightWasDown;
     private static int leftClicks;
     private static int rightClicks;
     private static int leftCps;
@@ -146,7 +143,8 @@ public final class HudModuleRenderer {
             int barY = rowY + 13;
             int barWidth = panelWidth - 10;
             graphics.fill(barX, barY, barX + barWidth, barY + 2, 0xFF303844);
-            float progress = effect.isInfiniteDuration() ? 1.0f : Math.min(1.0f, duration / 3600.0f);
+            int maximum = potionMaxDurations.getOrDefault(potionKey(effect), Math.max(1, duration));
+            float progress = effect.isInfiniteDuration() ? 1.0f : Math.clamp(duration / (float) Math.max(1, maximum), 0.0f, 1.0f);
             graphics.fill(barX, barY, barX + Math.max(1, Math.round(barWidth * progress)), barY + 2, barColor);
         }
     }
@@ -154,7 +152,7 @@ public final class HudModuleRenderer {
     private static void drawArmorHud(GuiGraphicsExtractor graphics, Minecraft client, int screenWidth) {
         EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         String[] labels = {"H", "C", "L", "B"};
-        int x = screenWidth - 91;
+        int x = Math.max(6, screenWidth - 91);
         int y = 6;
         drawPanel(graphics, x, y, 85, 54);
 
@@ -192,6 +190,6 @@ public final class HudModuleRenderer {
         int totalSeconds = Math.max(0, ticks) / 20;
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
-        return String.format(Locale.ROOT, "%d:%02d", minutes, seconds);
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 }
